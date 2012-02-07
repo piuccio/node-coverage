@@ -1,0 +1,75 @@
+!!! 5
+html(lang="en")
+	head
+		title node-coverage Admin Interface
+		link(rel="stylesheet", href="/style.css")
+	body
+		h3.header node-coverage 
+			em=name
+		.summary
+			h2 Statement coverage: 
+				h1 #{report.global.percentage.toFixed(2)}%
+		.summary
+			h2 Condition coverage: 
+				h1 #{report.global.conditionsPercentage.toFixed(2)}%
+		.summary
+			h2 Function coverage: 
+				h1 #{report.global.functionsPercentage.toFixed(2)}%
+		.clear
+
+		.content
+			table
+				thead
+					tr
+						-var isSorted = sort.what=="file"
+						th(class=isSorted ? "sorted" : "")
+							a(href="/r/#{name}/sort/file/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) File 
+							-if (isSorted)
+								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
+						
+						-var isSorted = sort.what=="statement"
+						th(class=isSorted ? "sorted" : "")
+							a(href="/r/#{name}/sort/statement/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Statement 
+							-if (isSorted)
+								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
+						
+						-var isSorted = sort.what=="condition"
+						th(class=isSorted ? "sorted" : "")
+							a(href="/r/#{name}/sort/condition/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Condition 
+							-if (isSorted)
+								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
+						
+						-var isSorted = sort.what=="function"
+						th(class=isSorted ? "sorted" : "")
+							a(href="/r/#{name}/sort/function/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Function 
+							-if (isSorted)
+								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
+				tbody
+					each single in report.files
+						tr
+							td
+								a(href="/r/#{name}/file/#{single.file.replace(/\//g, "+")}") #{single.file}
+							
+							-var percentage = single.report.percentage
+							if percentage < 30
+								td.low #{percentage.toFixed(2)}%
+							else if percentage > 80
+								td.high #{percentage.toFixed(2)}%
+							else
+								td.notbad #{percentage.toFixed(2)}%
+							
+							-var percentage = single.report.conditionsPercentage
+							if percentage < 30
+								td.low #{percentage.toFixed(2)}%
+							else if percentage > 80
+								td.high #{percentage.toFixed(2)}%
+							else
+								td.notbad #{percentage.toFixed(2)}%
+
+							-var percentage = single.report.functionsPercentage
+							if percentage < 30
+								td.low #{percentage.toFixed(2)}%
+							else if percentage > 80
+								td.high #{percentage.toFixed(2)}%
+							else
+								td.notbad #{percentage.toFixed(2)}%

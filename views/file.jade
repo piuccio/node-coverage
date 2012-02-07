@@ -1,0 +1,60 @@
+!!! 5
+html(lang="en")
+	head
+		title node-coverage Admin Interface
+		link(rel="stylesheet", href="/style.css")
+		link(href="http://fonts.googleapis.com/css?family=Inconsolata", rel="stylesheet", type="text/css")
+	body
+		h3.header node-coverage 
+			em=name
+			em=file
+		.summary
+			h2 Statement coverage: 
+				h1 #{report.percentage.toFixed(2)}%
+		.summary
+			h2 Condition coverage: 
+				h1 #{report.conditionsPercentage.toFixed(2)}%
+		.summary
+			h2 Function coverage: 
+				h1 #{report.functionsPercentage.toFixed(2)}%
+		.legend
+				dl
+					dt #
+					dd line number
+					dt count
+					dd how many times the statement was executed
+					dt true
+					dd conditions that were never evaluated <i>true</i>
+					dt false
+					dd conditions that were never evaluated <i>false</i>
+		.clear
+
+		.content
+			table.small
+				thead
+					tr
+						th #
+						th count
+						th true
+						th false
+						th
+				tbody
+					-var counter = 1
+					each loc in report.code
+						-var covered = loc[1] ? (report.detail[loc[1][0]] != 0) : true
+						-var coveredClass = covered ? "" : "not-covered"
+						-var missing = {"true" : [], "false" : []}
+						-if (covered && loc[1] && loc[1].length)
+							-for (i=1; i<loc[1].length; i++)
+								-if (report.conditionsDetail.all[loc[1][i]]["true"] == 0)
+									-var coveredClass = "partially-covered"
+									-missing["true"].push(i)
+								-else if (report.conditionsDetail.all[loc[1][i]]["false"] == 0)
+									-var coveredClass = "partially-covered"
+									-missing["false"].push(i)
+						tr(class=coveredClass)
+							td=counter++
+							td=loc[1] ? report.detail[loc[1][0]] : ""
+							td=missing ? missing["true"].join(" - ") : ""
+							td=missing ? missing["false"].join(" - ") : ""
+							td.code <code>#{loc[0]}</code>

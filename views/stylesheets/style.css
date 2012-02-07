@@ -1,0 +1,199 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+body {
+	background-color: #E5E5E5;
+	font-family: 'TurkishCSs', "proxima-nova-1","proxima-nova-2", Helmet, Freesans, sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  color: #404040;
+  text-rendering: optimizelegibility;
+}
+h1 {
+  font-size: 90px;
+  line-height: 78px;
+}
+h2 {
+  font-size: 24px;
+  line-height: 36px;
+  letter-spacing: 2px;
+  word-spacing : 4px;
+}
+h3 {
+  line-height: 27px;
+  font-size: 18px;
+}
+h4 {
+  font-size: 16px;
+  line-height: 36px;
+}
+h5 {
+  font-size: 14px;
+  line-height: 18px;
+}
+em {
+	font-size : 90%;
+	color : #999;
+	font-weight : bold;
+	margin-left : 1em;
+}
+
+.header {
+	height : 40px;
+	background-color : #2A2A2A;
+	padding: 10px 0px 0px 40px;
+	color : white;
+}
+.content {
+	padding : 15px;
+}
+.summary {
+	padding: 10px 50px;
+	float : left;
+	letter-spacing : -4px;
+}
+.clear {
+	clear: both;
+}
+
+.high {
+	color : #06724C;
+	font-weight: bold;
+}
+.low {
+	color : #C30604;
+}
+
+table {
+	border: 1px solid #CCC;
+	border-collapse: separate;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	width: 100%;
+	max-width: 100%;
+}
+thead {
+	background-color: #F1F1F1;
+}
+td {
+	padding: 8px;
+	line-height: 18px;
+	text-align: left;
+	border-top: 1px solid #CCC;
+	border-right: 1px solid #CCC;
+}
+th {
+	padding: 8px;
+	line-height: 24px;
+	text-align: left;
+	border-top: 1px solid #CCC;
+}
+th:first-child {
+	text-align: center;
+}
+.reports th {
+	text-align: center;
+}
+th a, th a:visited {
+	color: black;
+}
+tr:nth-child(odd) td, tr:nth-child(odd) th {
+	background-color: #F1F1F1;
+}
+.code {
+	background-color: #F1F1F1;
+	border: 0;
+	font-family: 'Inconsolata', sans-serif;
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap !important;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+}
+tr.not-covered td {
+	background-color: #CFB7B9;
+}
+tr.partially-covered td {
+	background-color: #F8EDD1;
+}
+.small td {
+	line-height: 14px;
+}
+.small td:nth-child(2), .small th:nth-child(2),
+.small td:nth-child(3), .small th:nth-child(3),
+.small td:nth-child(4), .small th:nth-child(4) {
+	font-size: 75%;
+}
+.legend {
+	font-size: 75%;
+	float: right;
+	margin: 15px 25px 0 0;
+}
+dt {
+	font-weight: bold;
+}
+dd {
+	padding-left: 12px;
+}
+.sort-direction {
+	font-size : 95%;
+}
+.sorted {
+	font-weight: bold;
+}

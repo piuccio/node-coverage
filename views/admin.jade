@@ -1,0 +1,24 @@
+!!! 5
+html(lang="en")
+	head
+		title node-coverage Admin Interface
+		link(rel="stylesheet", href="/style.css")
+	body
+		h3.header node-coverage 
+			em=conf.htdoc
+		.content
+			h4 Reports from
+				em=conf.report
+		
+			table.reports
+				thead
+					tr
+						th Report
+						th Date
+				tbody
+					each report in reports
+						tr
+							td
+								a(href="/r/#{report.id}") #{report.id}
+							td
+								em=report.date
