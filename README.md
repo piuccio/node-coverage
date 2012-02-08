@@ -11,6 +11,7 @@ There are a large variety of coverage criteria. node-coverage measures
 * __statement coverage__. Whether or not each statement has been executed.
 * __condition coverage__. Whether or not each boolean sub-expression evaluated both to `true` and `false`.
 * __decision coverage__. For Javascript this implies from condition coverage.
+* __function coverage__. Whether or not each functions has been called. Full statement coverage doesn't imply full function coverage when empty functions are used. An empty function has full statement coverage even when it's not called.
 
 Why statement coverage is not enough?
 Consider the following code:
@@ -81,4 +82,4 @@ The server instruments JavaScript files on each request. It's possible to instru
 
 You can then run the server with
 
-    node server.js -d /var/www/myApp
+    node server.js -d /var/www/myInstrumentedApp
