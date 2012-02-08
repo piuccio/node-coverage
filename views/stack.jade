@@ -1,0 +1,27 @@
+!!! 5
+html(lang="en")
+	head
+		title node-coverage Admin Interface
+		link(rel="stylesheet", href="/style.css")
+	body
+		h3.header node-coverage 
+			em=name
+		.content
+			h4 Function stack for
+				em=name
+		
+			table
+				thead
+					tr
+						th File
+						th Function Name
+						th Line
+				tbody
+					each fn in report.functions
+						-var codeReport = report.files[fn[0]].code
+						-var generatedLineNumber = codeReport.fns[fn[2]]
+						tr
+							td
+								a(href="/r/#{name}/file/#{fn[0].replace(/\//g, "+")}") #{fn[0]}
+							td=fn[1] + ": " + generatedLineNumber
+							td=codeReport.src[generatedLineNumber].s

@@ -15,6 +15,7 @@ html(lang="en")
 					tr
 						th Report
 						th Date
+						th Function stack
 				tbody
 					each report in reports
 						tr
@@ -22,3 +23,5 @@ html(lang="en")
 								a(href="/r/#{report.id}") #{report.id}
 							td
 								em=report.date
+							td
+								a(href="/fn/#{report.id}") view

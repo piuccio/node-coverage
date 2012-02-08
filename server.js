@@ -186,6 +186,20 @@ admin.get("/r/:report/sort/:what/:how", function (req, res) {
 	});
 });
 
+admin.get("/fn/:report", function (req, res) {
+	readReport(req.params.report, function (err, report) {
+		if (err) {
+			console.error(err);
+			res.send(500);
+		} else {
+			res.render("stack", {
+				name : req.params.report,
+				report : report
+			});
+		}
+	});
+});
+
 admin.get(/\.css$/, function (req, res) {
 	res.sendfile(__dirname + "/views/stylesheets" + req.url);
 });

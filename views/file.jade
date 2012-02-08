@@ -40,21 +40,21 @@ html(lang="en")
 						th
 				tbody
 					-var counter = 1
-					each loc in report.code
-						-var covered = loc[1] ? (report.detail[loc[1][0]] != 0) : true
+					each loc in report.code.src
+						-var covered = loc.l ? (report.detail[loc.l] > 0) : true
 						-var coveredClass = covered ? "" : "not-covered"
 						-var missing = {"true" : [], "false" : []}
-						-if (covered && loc[1] && loc[1].length)
-							-for (i=1; i<loc[1].length; i++)
-								-if (report.conditionsDetail.all[loc[1][i]]["true"] == 0)
+						-if (covered && loc.c)
+							-for (i=0; i<loc.c.length; i++)
+								-if (report.conditionsDetail.all[loc.c[i]]["true"] == 0)
 									-var coveredClass = "partially-covered"
-									-missing["true"].push(i)
-								-else if (report.conditionsDetail.all[loc[1][i]]["false"] == 0)
+									-missing["true"].push(i + 1)
+								-else if (report.conditionsDetail.all[loc.c[i]]["false"] == 0)
 									-var coveredClass = "partially-covered"
-									-missing["false"].push(i)
+									-missing["false"].push(i + 1)
 						tr(class=coveredClass)
 							td=counter++
-							td=loc[1] ? report.detail[loc[1][0]] : ""
-							td=missing ? missing["true"].join(" - ") : ""
-							td=missing ? missing["false"].join(" - ") : ""
-							td.code <code>#{loc[0]}</code>
+							td=loc.l ? report.detail[loc.l] : ""
+							td=missing ? missing["true"].join(", ") : ""
+							td=missing ? missing["false"].join(", ") : ""
+							td.code <code>#{loc.s}</code>
