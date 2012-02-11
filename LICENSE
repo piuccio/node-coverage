@@ -41,3 +41,6 @@ node-coverage includes as dependencies
  * mkdirp - MIT/X11 license
 	https://github.com/substack/node-mkdirp
  	Copyright 2010 James Halliday (mail@substack.net)
+ * Nodeunit - MIT license
+ 	https://github.com/caolan/nodeunit
+    Copyright (c) 2010 Caolan McMahon

@@ -52,6 +52,8 @@ node-coverage works instrumenting your JavaScript code and serving those instrum
 
 Those dependencies are checked-in inside `node_modules`.
 
+Unit tests run on [Nodeunit](https://github.com/caolan/nodeunit), which is included in the stream as a submodule.
+
 ## Usage
     node server.js -d "/var/www" -r "/var/log/reports"
 This creates a server listenig on port `8080` serving the content of your folder `/var/www` and saving coverage reports inside `/var/log/reports`
@@ -75,13 +77,28 @@ It's also possible to specify a report name from the `submit` function
 
 
 ### Supported options
+
 * `-h` or `--help` list of options
 * `-d` or `--doc-root` document root of the web server. All JS files in this folder will be instrumented. Default `/var/www`
 * `-p` or `--port` web server port. Default `8080`
 * `-r` or `--report-dir` directory where reports are stored. Default `/var/log/node-coverage`
 * `-a` or `--admin-port` administrative server port. Default `8787`
+* `--condition`, `--no-condition` Enable or disable condition coverage. By default it's enabled.
+* `--function`, `--no-function` Enable or disable function coverage. By default it's disabled.
 
-### Instrumenting offline
+By default function coverage is disabled, to enable it you can run
+
+    node server.js --function
+
+or
+
+    node server.js --no-condition
+
+to disable condition coverage.
+
+
+## Instrumenting offline
+
 The server instruments JavaScript files on each request. It's possible to instrument offline your files running
 
     node instrument.js /var/www/myApp /var/www/myInstrumentedApp
@@ -89,3 +106,30 @@ The server instruments JavaScript files on each request. It's possible to instru
 You can then run the server with
 
     node server.js -d /var/www/myInstrumentedApp
+
+
+### Supported options
+
+* `-h` or `--help` list of options
+* `-t` ot `test` run unit tests
+* `--condition`, `--no-condition` enable or disable condition coverage. By default it's enabled.
+* `--function`, `--no-function` enable or disable function coverage. By default it's disabled.
+
+By default function coverage is disabled, to enable it you can run
+
+    node instrument.js --function /var/www/myApp /var/www/myInstrumentedApp
+
+or
+
+    node instrument.js --no-condition /var/www/myApp /var/www/myInstrumentedApp
+
+to disable condition coverage.
+
+In order to run unit tests after cloning this repository you need to run
+
+    git submodule init
+    git submodule update
+
+and after that
+
+    node instrument.js -t

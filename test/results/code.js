@@ -1,7 +1,4 @@
-var vm = require("vm");
-var report = require("../lib/report");
-var assert = require("assert");
-var expectedCoverage = {
+exports.results = {
 	"base.js" : {
 		total : 3,
 		visited : 3,
@@ -129,43 +126,3 @@ var expectedCoverage = {
 		functionsCalled : 3
 	}
 };
-
-var compare = function (file, code) {
-	//console.log(code);
-
-	var serialized;
-	var sandbox = {
-		XMLHttpRequest : function () {
-			this.open = function () {};
-			this.setRequestHeader = function () {};
-			this.send = function (data) {
-				serialized = data;
-			};
-		},
-		window : {}
-	};
-	vm.runInNewContext(code, sandbox, file);
-	sandbox.$$_l.submit();
-
-	var json = JSON.parse(serialized);
-
-	var result = report.generateAll(json).files[file];
-	var expected = expectedCoverage[file.substring(file.lastIndexOf("/") + 1)];
-	assert.ok(expected, "Missing expected result for " + file);
-
-	//console.log(result);
-
-	assert.equal(result.total, expected.total, "total " + file + " got " + result.total);
-	assert.equal(result.visited, expected.visited, "visited " + file + " got " + result.visited);
-
-	assert.equal(result.conditions, expected.conditions, "conditions " + file + " got " + result.conditions);
-	assert.equal(result.conditionsTrue, expected.conditionsTrue, "conditionsTrue " + file + " got " + result.conditionsTrue);
-	assert.equal(result.conditionsFalse, expected.conditionsFalse, "conditionsFalse " + file + " got " + result.conditionsFalse);
-
-	assert.equal(result.functions, expected.functions, "functions " + file + " got " + result.functions);
-	assert.equal(result.functionsCalled, expected.functionsCalled, "functionsCalled " + file + " got " + result.functionsCalled);
-
-	console.log("Test", file, "passed");
-};
-
-exports.compare = compare;

@@ -12,17 +12,25 @@ var argv = require("optimist")
 	.options("p", {
 		"alias" : "port",
 		"default" : 8080
-	}).describe("Web server port")
+	}).describe("p", "Web server port")
 	.options("a", {
 		"alias" : "admin-port",
 		"default" : 8787
-	}).describe("Admin server port")
+	}).describe("a", "Admin server port")
 	.boolean("h").alias("h", "help")
+	.boolean("function")
+		.default("function", false)
+		.describe("function", "Enable function coverage. Disable with --no-function")
+	.boolean("condition")
+		.default("condition", true)
+		.describe("condition", "Enable condition coverage. Disable with --no-condition")
 	.argv;
 
+
 if (argv.h) {
-	require("optimist").showHelp();
+	return require("optimist").showHelp();
 }
+
 
 try {
 	var stat = fs.statSync(argv.r);
@@ -31,7 +39,10 @@ try {
 	}
 
 	/* Instrumentation server */
-	require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a);
+	require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
+		"function" : argv["function"],
+		"condition" : argv.condition
+	});
 
 	/* Admin server */
 	require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
