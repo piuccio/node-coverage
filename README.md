@@ -68,6 +68,12 @@ To see the report go to the administrative interface on
 
     http://localhost:8787
 
+
+It's also possible to specify a report name from the `submit` function
+
+    $$_l.submit("myTestCaseReport")
+
+
 ### Supported options
 * `-h` or `--help` list of options
 * `-d` or `--doc-root` document root of the web server. All JS files in this folder will be instrumented. Default `/var/www`
