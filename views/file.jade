@@ -10,13 +10,13 @@ html(lang="en")
 			em=file
 		.summary
 			h2 Statement coverage: 
-				h1 #{report.percentage.toFixed(2)}%
+				h1 #{report.statements.percentage.toFixed(2)}%
 		.summary
 			h2 Condition coverage: 
-				h1 #{report.conditionsPercentage.toFixed(2)}%
+				h1 #{report.conditions.percentage.toFixed(2)}%
 		.summary
 			h2 Function coverage: 
-				h1 #{report.functionsPercentage.toFixed(2)}%
+				h1 #{report.functions.percentage.toFixed(2)}%
 		.legend
 				dl
 					dt #
@@ -41,20 +41,20 @@ html(lang="en")
 				tbody
 					-var counter = 1
 					each loc in report.code.src
-						-var covered = loc.l ? (report.detail[loc.l] > 0) : true
+						-var covered = loc.l ? (report.statements.detail[loc.l] > 0) : true
 						-var coveredClass = covered ? "" : "not-covered"
 						-var missing = {"true" : [], "false" : []}
 						-if (covered && loc.c)
 							-for (i=0; i<loc.c.length; i++)
-								-if (report.conditionsDetail.all[loc.c[i]]["true"] == 0)
+								-if (report.conditions.detail.all[loc.c[i]]["true"] == 0)
 									-var coveredClass = "partially-covered"
 									-missing["true"].push(i + 1)
-								-else if (report.conditionsDetail.all[loc.c[i]]["false"] == 0)
+								-else if (report.conditions.detail.all[loc.c[i]]["false"] == 0)
 									-var coveredClass = "partially-covered"
 									-missing["false"].push(i + 1)
 						tr(class=coveredClass)
 							td=counter++
-							td=loc.l ? report.detail[loc.l] : ""
+							td=loc.l ? report.statements.detail[loc.l] : ""
 							td=missing ? missing["true"].join(", ") : ""
 							td=missing ? missing["false"].join(", ") : ""
 							td.code <code>#{loc.s}</code>

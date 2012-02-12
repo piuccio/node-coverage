@@ -8,13 +8,13 @@ html(lang="en")
 			em=name
 		.summary
 			h2 Statement coverage: 
-				h1 #{report.global.percentage.toFixed(2)}%
+				h1 #{report.global.statements.percentage.toFixed(2)}%
 		.summary
 			h2 Condition coverage: 
-				h1 #{report.global.conditionsPercentage.toFixed(2)}%
+				h1 #{report.global.conditions.percentage.toFixed(2)}%
 		.summary
 			h2 Function coverage: 
-				h1 #{report.global.functionsPercentage.toFixed(2)}%
+				h1 #{report.global.functions.percentage.toFixed(2)}%
 		.clear
 
 		.content
@@ -50,7 +50,7 @@ html(lang="en")
 							td
 								a(href="/r/#{name}/file/#{single.file.replace(/\//g, "+")}") #{single.file}
 							
-							-var percentage = single.report.percentage
+							-var percentage = single.report.statements.percentage
 							if percentage < 30
 								td.low #{percentage.toFixed(2)}%
 							else if percentage > 80
@@ -58,7 +58,7 @@ html(lang="en")
 							else
 								td.notbad #{percentage.toFixed(2)}%
 							
-							-var percentage = single.report.conditionsPercentage
+							-var percentage = single.report.conditions.percentage
 							if percentage < 30
 								td.low #{percentage.toFixed(2)}%
 							else if percentage > 80
@@ -66,7 +66,7 @@ html(lang="en")
 							else
 								td.notbad #{percentage.toFixed(2)}%
 
-							-var percentage = single.report.functionsPercentage
+							-var percentage = single.report.functions.percentage
 							if percentage < 30
 								td.low #{percentage.toFixed(2)}%
 							else if percentage > 80
