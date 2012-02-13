@@ -43,6 +43,7 @@ function instrumentFolder () {
 
 	fileSystem.statFileOrFolder(src, "", callback, {
 		"function" : argv["function"],
-		"condition" : argv.condition
+		"condition" : argv.condition,
+		"doHighlight" : true
 	});
 };

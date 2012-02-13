@@ -24,6 +24,9 @@ var argv = require("optimist")
 	.boolean("condition")
 		.default("condition", true)
 		.describe("condition", "Enable condition coverage. Disable with --no-condition")
+	.boolean("session")
+		.default("session", true)
+		.describe("session", "Store instrumented code in session storage. This reduces the burden on browsers. Disable with --no-session")
 	.argv;
 
 
@@ -41,7 +44,8 @@ try {
 	/* Instrumentation server */
 	require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
 		"function" : argv["function"],
-		"condition" : argv.condition
+		"condition" : argv.condition,
+		"doHighlight" : !argv.session
 	});
 
 	/* Admin server */
