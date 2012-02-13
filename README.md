@@ -164,19 +164,19 @@ Replace `[id]` with the actual report's id.
 The returned JSON has the following structure
 
 * global
-> * statements
->> * total : total number of lines,
->> * covered : number of exectuded statement,
->> * percentage : percentage of covered statements, float 0<>100,
-> * conditions
->> * total : total number of conditions,
->> * coveredTrue : number of conditions evaluated to true,
->> * coveredFalse : number of conditions evaluated to false,
->> * percentage : percentage of conditions evaluated both true and false,
-> * functions
->> * total : total number of functions,
->> * covered : number of functions that have been called (including empty functions),
->> * percentage : percentage of functions called
+  * statements
+    * total : total number of lines,
+    * covered : number of exectuded statement,
+    * percentage : percentage of covered statements, float 0<>100,
+  * conditions
+    * total : total number of conditions,
+    * coveredTrue : number of conditions evaluated to true,
+    * coveredFalse : number of conditions evaluated to false,
+    * percentage : percentage of conditions evaluated both true and false,
+  * functions
+    * total : total number of functions,
+    * covered : number of functions that have been called (including empty functions),
+    * percentage : percentage of functions called
 * files : map of single reports for every file. The key being the file name and the value being the file report
 * functions : history of all covered functions
 
@@ -200,23 +200,23 @@ Slashes in `fileName` must be converted into `+`
 The returned JSON contains
 
 *  code : _highlighted_ code
-> * src : array (one entry per line of code) where value are object with
->> * s : source line
->> * l : lineid of the instrumented function
->> * c : list of conditions (array)
-> * fns : object mapping a function id to the generated line of code
+  * src : array (one entry per line of code) where value are object with
+    * s : source line
+    * l : lineid of the instrumented function
+    * c : list of conditions (array)
+  * fns : object mapping a function id to the generated line of code
 * statements
-> * total : total number of lines,
-> * covered : number of exectuded statement,
-> * detail : coverage detail for every line, how many times that statement was called,
-> * percentage : percentage of covered statements, float 0<>100,
+  * total : total number of lines,
+  * covered : number of exectuded statement,
+  * detail : coverage detail for every line, how many times that statement was called,
+  * percentage : percentage of covered statements, float 0<>100,
 *  conditions
-> * total : total number of conditions,
-> * coveredTrue : number of conditions evaluated to true,
-> * coveredFalse : number of conditions evaluated to false,
-> * detail : list of conditions that evaluated 'true' or 'false' and 'all' for both
-> * percentage : percentage of conditions evaluated both true and false (100 if no conditions),
+  * total : total number of conditions,
+  * coveredTrue : number of conditions evaluated to true,
+  * coveredFalse : number of conditions evaluated to false,
+  * detail : list of conditions that evaluated 'true' or 'false' and 'all' for both
+  * percentage : percentage of conditions evaluated both true and false (100 if no conditions),
 *  functions
-> * total : total number of functions,
-> * covered : number of functions that have been called (including empty functions),
-> * percentage : percentage of functions called
+  * total : total number of functions,
+  * covered : number of functions that have been called (including empty functions),
+  * percentage : percentage of functions called
