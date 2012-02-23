@@ -6,19 +6,23 @@ html(lang="en")
 	body
 		h3.header node-coverage 
 			em=conf.htdoc
-		.content
+		form.content(action="merge", method="GET")
 			h4 Reports from
 				em=conf.report
-		
+
 			table.reports
 				thead
 					tr
+						th.merge 
+							input(type="submit", value="Merge")
 						th Report
 						th Date
 						th Function stack
 				tbody
 					each report in reports
 						tr
+							td
+								input(type="checkbox", name="report", value=report.id)
 							td
 								a(href="/r/#{report.id}") #{report.id}
 							td

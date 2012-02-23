@@ -166,5 +166,29 @@ exports.results = {
 		functions : 4,
 		functionsCalled : 3,
 		functionsPercentage : 100 * 3 / 4
+	},
+	"for_in.js" : {
+		total : 5,
+		visited : 5,
+		statementsPercentage : 100,
+		conditions : 1,
+		conditionsTrue : 1,
+		conditionsFalse : 1,
+		conditionsPercentage : 100,
+		functions : 1,
+		functionsCalled : 1,
+		functionsPercentage : 100
+	},
+	"minified.js" : {
+		total : 15,
+		visited : 11,
+		statementsPercentage : 100 * 11 / 15,
+		conditions : 3,
+		conditionsTrue : 1,
+		conditionsFalse : 2,
+		conditionsPercentage : 50,
+		functions : 3,
+		functionsCalled : 1,
+		functionsPercentage : 100 / 3
 	}
 };

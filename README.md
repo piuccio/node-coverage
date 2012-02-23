@@ -219,4 +219,13 @@ The returned JSON contains
 *  functions
   * total : total number of functions,
   * covered : number of functions that have been called (including empty functions),
-  * percentage : percentage of functions called
+  * percentage : percentage of functions called,
+  * detail : coverage detail of functions, how many times the function was called
+
+### Merge multiple reports
+
+    http://localhost:8787/merge/?report=[id]&report=[id]?callback=myCallback
+
+Where `id` is the report name. It's possible to merge more than two reports adding extra `&report=[id]`
+
+The returned JSON has the same structure of a single report.

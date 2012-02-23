@@ -1,7 +1,7 @@
 var vm = require("vm");
 var report = require("../../lib/report");
 
-exports.executeCode = function (file, code) {
+exports.executeCode = function (file, code, globals) {
 	var serialized;
 	var sandbox = {
 		XMLHttpRequest : function () {
@@ -11,7 +11,7 @@ exports.executeCode = function (file, code) {
 				serialized = data;
 			};
 		},
-		window : {}
+		window : globals || {}
 	};
 	vm.runInNewContext(code, sandbox, file);
 	sandbox.$$_l.submit();
@@ -44,7 +44,7 @@ exports.assertCoverageEquals = function (measured, expected, file, testObject) {
 	testObject.equal(functionCoverage.total, expected.functions, "functions " + file);
 	testObject.equal(functionCoverage.covered, expected.functionsCalled, "functionsCalled " + file);
 	testObject.equal(functionCoverage.percentage.toFixed(5), 
-		expected.functionsPercentage.toFixed(5), "percentage conditions " + file);
+		expected.functionsPercentage.toFixed(5), "percentage functions " + file);
 };
 
 exports.assertDetailsEquals = function (measured, expected, file, testObject) {
@@ -57,14 +57,14 @@ exports.assertDetailsEquals = function (measured, expected, file, testObject) {
 	}
 
 	testObject.equal(howManyLines, expected.statements.number, "number of statements detail " + file);
-	testObject.equal(totalExecutions, expected.statements.total, "total of statements detail " + file);
+	testObject.equal(totalExecutions, expected.statements.total, "total statements detail " + file);
 
 	var conditionsDetails = measured.conditions.detail;
 	["true", "false"].forEach(function (condType) {
 		testObject.equal(
 			conditionsDetails[condType].length, 
 			expected.conditions[condType].number, 
-			"number of conditions detail " + condType + " " +file
+			"number of conditions detail " + condType + " " + file
 		);
 	});
 
@@ -77,4 +77,14 @@ exports.assertDetailsEquals = function (measured, expected, file, testObject) {
 	testObject.equal(totalConditions, expected.conditions.all, "all conditions detail " + file);
 	testObject.equal(totalTrue, expected.conditions["true"].total, "total true conditions detail " + file);
 	testObject.equal(totalFalse, expected.conditions["false"].total, "total false conditions detail " + file);
+
+	var functionsDetails = measured.functions.detail;
+	var totalFunctions = 0, howManyFunctions = 0;
+	for (var fnId in functionsDetails) {
+		howManyFunctions += 1;
+		totalFunctions += functionsDetails[fnId];
+	}
+
+	testObject.equal(howManyFunctions, expected.functions.number, "number of functions detail " + file);
+	testObject.equal(totalFunctions, expected.functions.total, "total functions detail " + file);
 };
