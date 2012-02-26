@@ -15,10 +15,18 @@ var argv = require("optimist")
 
 if (argv.t) {
 	runTests();
-} else if (argv._.length == 2) {
-	instrumentFolder();
 } else {
-	displayHelp();
+	switch (argv._.length) {
+		case 1:
+			instrumentFile(argv._[0], argv);
+			break;
+		case 2:
+			instrumentFolder(argv._[0], argv._[1], argv);
+			break;
+		default:
+			displayHelp();
+			break;
+	}
 }
 
 
@@ -30,20 +38,29 @@ function displayHelp () {
 	require("optimist").showHelp();
 };
 
-function instrumentFolder () {
-	var src, callback;
-
-	src = [argv._[0]];
+function instrumentFolder (source, destination, options) {
 	try {
-		callback = fileSystem.writeFileTo(src[0], argv._[1]);
+		var callback = fileSystem.writeFileTo(source, destination);
+
+		fileSystem.statFileOrFolder([source], "", callback, {
+			"function" : options["function"],
+			"condition" : options["condition"],
+			"doHighlight" : true
+		});
 	} catch (ex) {
 		require("optimist").showHelp();
 		return console.error(ex);
 	}
+};
 
-	fileSystem.statFileOrFolder(src, "", callback, {
-		"function" : argv["function"],
-		"condition" : argv.condition,
+function instrumentFile (fileName, options) {
+	var callback = function (file, code) {
+		console.log(code);
+	};
+
+	fileSystem.statFileOrFolder([fileName], "", callback, {
+		"function" : options["function"],
+		"condition" : options["condition"],
 		"doHighlight" : true
 	});
 };

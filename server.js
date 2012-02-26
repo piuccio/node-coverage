@@ -31,25 +31,24 @@ var argv = require("optimist")
 
 
 if (argv.h) {
-	return require("optimist").showHelp();
-}
+	require("optimist").showHelp();
+} else {
+	try {
+		var stat = fs.statSync(argv.r);
+		if (!stat.isDirectory()) {
+			throw new Error(argv.r + " is not a directory");
+		}
 
+		/* Instrumentation server */
+		require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
+			"function" : argv["function"],
+			"condition" : argv.condition,
+			"doHighlight" : !argv.session
+		});
 
-try {
-	var stat = fs.statSync(argv.r);
-	if (!stat.isDirectory()) {
-		throw new Error(argv.r + " is not a directory");
+		/* Admin server */
+		require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
+	} catch (ex) {
+		console.error("Please specify a valid report directory", ex);
 	}
-
-	/* Instrumentation server */
-	require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
-		"function" : argv["function"],
-		"condition" : argv.condition,
-		"doHighlight" : !argv.session
-	});
-
-	/* Admin server */
-	require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
-} catch (ex) {
-	console.error("Please specify a valid report directory", ex);
 }
