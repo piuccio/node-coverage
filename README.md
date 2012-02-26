@@ -86,6 +86,7 @@ It's also possible to specify a report name from the `submit` function
 * `--condition`, `--no-condition` Enable or disable condition coverage. By default it's enabled.
 * `--function`, `--no-function` Enable or disable function coverage. By default it's disabled.
 * `--session`, `--no-session` Enable or disable session storage for information not strictly needed by the browser. By default it's enabled. Disabling this means that more code is sent to and from the client.
+* `-i` or `--ignore` Ignore file or folder. This file/folder won't be instrumented. Path is relative to document root.
 
 By default function coverage is disabled, to enable it you can run
 
@@ -96,6 +97,11 @@ or
     node server.js --no-condition
 
 to disable condition coverage.
+
+You can exclude some files or folders using
+
+    node server.js -i lib/minified -i lib/jquery.js
+
 
 
 ## Instrumenting offline
@@ -115,6 +121,8 @@ You can then run the server with
 * `-t` ot `test` run unit tests
 * `--condition`, `--no-condition` enable or disable condition coverage. By default it's enabled.
 * `--function`, `--no-function` enable or disable function coverage. By default it's disabled.
+* `-i` or `--ignore` Ignore file or folder. This file/folder is copied in target folder but not instrumented. Path relative to the source folder.
+* `-x` or `--exclude` Exclude file or folder. This file/folder won't be copied in target folder. Path relative to the source folder.
 
 By default function coverage is disabled, to enable it you can run
 
@@ -133,6 +141,12 @@ You can also instrument a single file launching
     node instrument.js myScript.js
 
 The output is sent to standard input.
+
+The command
+
+    node instrument /var/www/myApp /var/www/myInstrumentedApp -x .git -i lib/minified
+
+copies and instrument all files inside `myApp` excluding `.git` which is not copied at all and `lib/minified` which is copied but won't be instrumented for coverage.
 
 #### Unit Test
 

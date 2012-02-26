@@ -27,6 +27,9 @@ var argv = require("optimist")
 	.boolean("session")
 		.default("session", true)
 		.describe("session", "Store instrumented code in session storage. This reduces the burden on browsers. Disable with --no-session")
+	.options("i", {
+		"alias" : "ignore"
+	}).describe("i", "Ignore file or folder. This file/folder won't be instrumented. Path relative to document root")
 	.argv;
 
 
@@ -39,11 +42,21 @@ if (argv.h) {
 			throw new Error(argv.r + " is not a directory");
 		}
 
+		var ignore = argv.i || [];
+		if (!ignore.forEach) {
+			ignore = [ignore];
+		}
+
 		/* Instrumentation server */
 		require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
 			"function" : argv["function"],
 			"condition" : argv.condition,
-			"doHighlight" : !argv.session
+			"doHighlight" : !argv.session,
+			"ignore" : ignore.map(function (path) {
+				if (path.charAt(0) !== "/") {
+					return "/" + path;
+				}
+			})
 		});
 
 		/* Admin server */

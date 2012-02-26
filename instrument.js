@@ -9,6 +9,12 @@ var argv = require("optimist")
 	.boolean("condition")
 		.default("condition", true)
 		.describe("condition", "Enable condition coverage. Disable with --no-condition")
+	.options("x", {
+		"alias" : "exclude"
+	}).describe("x", "Exclude file or folder. This file/folder won't be copied in target folder. Path relative to the source folder")
+	.options("i", {
+		"alias" : "ignore"
+	}).describe("i", "Ignore file or folder. This file/folder is copied in target folder but not instrumented. Path relative to the source folder")
 	.argv;
 
 
@@ -45,7 +51,9 @@ function instrumentFolder (source, destination, options) {
 		fileSystem.statFileOrFolder([source], "", callback, {
 			"function" : options["function"],
 			"condition" : options["condition"],
-			"doHighlight" : true
+			"doHighlight" : true,
+			"exclude" : options.exclude,
+			"ignore" : options.ignore
 		});
 	} catch (ex) {
 		require("optimist").showHelp();
