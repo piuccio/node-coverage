@@ -6,10 +6,6 @@ function createInstrumentCallback (container) {
 	return function (file, code) {
 		var isJs = (path.extname(file) === ".js");
 
-		if (!code) {
-			console.log( file)
-		}
-
 		container[file] = isJs ? {
 			isJs : true,
 			hasStatement : code.indexOf("$$_l(") > 0,

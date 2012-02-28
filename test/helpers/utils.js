@@ -88,3 +88,35 @@ exports.assertDetailsEquals = function (measured, expected, file, testObject) {
 	testObject.equal(howManyFunctions, expected.functions.number, "number of functions detail " + file);
 	testObject.equal(totalFunctions, expected.functions.total, "total functions detail " + file);
 };
+
+exports.clusterFunctions = function (functions) {
+	var map = {};
+	functions.forEach(function (item) {
+		var match = /(\D+)\d+_\d+$/.exec(item);
+		var name = match[1];
+
+		if (!map[name]) {
+			map[name] = 0;
+		}
+		
+		map[name] += 1;
+	});
+
+	return map;
+};
+
+exports.objectEquals = function (compare, expected) {
+	for (var key in compare) {
+		if (expected[key] !== compare[key]) {
+			return false;
+		}
+	}
+
+	for (var key in expected) {
+		if (compare[key] !== expected[key]) {
+			return false;
+		}
+	}
+
+	return true;
+};

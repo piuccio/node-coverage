@@ -340,8 +340,8 @@ exports.results = {
 		},
 		"minified.js" : {
 			statements : {
-				number : 15,
-				total : 12
+				number : 17,
+				total : 14
 			},
 			conditions : {
 				"true" : {
@@ -355,8 +355,8 @@ exports.results = {
 				"all" : 3
 			},
 			functions : {
-				number : 3,
-				total : 2
+				number : 6,
+				total : 3
 			}
 		}
 	},

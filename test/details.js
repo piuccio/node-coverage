@@ -4,7 +4,7 @@ var fileSystem = require("../lib/fileSystem");
 var expectedCoverage = require("./results/details").results;
 var totalAssertsPerFile = 9;
 
-function compare (file, code, options) {
+function compare (file, code) {
 	var generatedReport = helpers.executeCode(file, code);
 	var shortFileName = helpers.shortName(file);
 

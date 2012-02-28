@@ -180,15 +180,15 @@ exports.results = {
 		functionsPercentage : 100
 	},
 	"minified.js" : {
-		total : 15,
-		visited : 11,
-		statementsPercentage : 100 * 11 / 15,
+		total : 17,
+		visited : 13,
+		statementsPercentage : 100 * 13 / 17,
 		conditions : 3,
 		conditionsTrue : 1,
 		conditionsFalse : 2,
 		conditionsPercentage : 50,
-		functions : 3,
-		functionsCalled : 1,
+		functions : 6,
+		functionsCalled : 2,
 		functionsPercentage : 100 / 3
 	}
 };
