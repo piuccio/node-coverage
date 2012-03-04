@@ -120,17 +120,45 @@ em {
 }
 
 table {
-	border: 1px solid #CCC;
-	border-collapse: separate;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	width: 100%;
 	max-width: 100%;
 }
-thead {
+
+thead tr {
+	border: 1px solid #CCC;
+}
+thead tr.partial {
+	border: 0;
+}
+thead tr.partial th:first-child {
+	background-color: transparent;
+	border: 0;
+}
+th {
+	padding: 8px;
+	line-height: 24px;
+	text-align: left;
+	border-top: 1px solid #CCC;
 	background-color: #F1F1F1;
 }
+th:first-child {
+	text-align: center;
+}
+th.flap {
+	border: 1px solid #CCC;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	text-align: center;
+}
+
+table tbody tr {
+	border: 1px solid #CCC;
+	border-collapse: separate;
+}
+
 td {
 	padding: 8px;
 	line-height: 18px;
@@ -138,15 +166,7 @@ td {
 	border-top: 1px solid #CCC;
 	border-right: 1px solid #CCC;
 }
-th {
-	padding: 8px;
-	line-height: 24px;
-	text-align: left;
-	border-top: 1px solid #CCC;
-}
-th:first-child {
-	text-align: center;
-}
+
 .reports th {
 	text-align: center;
 }
@@ -199,4 +219,8 @@ dd {
 }
 .merge {
 	width : 3em;
+}
+
+.chart {
+	margin-bottom : 30px;
 }

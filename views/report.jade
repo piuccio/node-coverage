@@ -20,6 +20,10 @@ html(lang="en")
 		.content
 			table
 				thead
+					tr.partial
+						th
+						th(colspan=3).flap 
+							a(href="/stat/#{name}") Stats & Graphs
 					tr
 						-var isSorted = sort.what=="file"
 						th(class=isSorted ? "sorted" : "")

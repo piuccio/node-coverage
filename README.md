@@ -173,9 +173,9 @@ Empty space characters should be converted in `%20`.
 
 The returned JSON is an Array of objects containing
 
-* id : report name
-* time : creation timestamp
-* date : creation date
+* `id` : report name
+* `time` : creation timestamp
+* `date` : creation date
 
 ### Get the details of a report
 
@@ -185,22 +185,22 @@ Replace `[id]` with the actual report's id.
 
 The returned JSON has the following structure
 
-* global
-  * statements
-    * total : total number of lines,
-    * covered : number of exectuded statement,
-    * percentage : percentage of covered statements, float 0<>100,
-  * conditions
-    * total : total number of conditions,
-    * coveredTrue : number of conditions evaluated to true,
-    * coveredFalse : number of conditions evaluated to false,
-    * percentage : percentage of conditions evaluated both true and false,
-  * functions
-    * total : total number of functions,
-    * covered : number of functions that have been called (including empty functions),
-    * percentage : percentage of functions called
-* files : map of single reports for every file. The key being the file name and the value being the file report
-* functions : history of all covered functions
+* `global`
+  * `statements`
+    * `total` : total number of lines,
+    * `covered` : number of exectuded statement,
+    * `percentage` : percentage of covered statements, float 0<>100,
+  * `conditions`
+    * `total` : total number of conditions,
+    * `coveredTrue` : number of conditions evaluated to true,
+    * `coveredFalse` : number of conditions evaluated to false,
+    * `percentage` : percentage of conditions evaluated both true and false,
+  * `functions`
+    * `total` : total number of functions,
+    * `covered` : number of functions that have been called (including empty functions),
+    * `percentage` : percentage of functions called
+* `files` : map of single reports for every file. The key being the file name and the value being the file report
+* `functions` : history of all covered functions
 
 By default files reports are sorted alphabetically by file name.
 
@@ -213,6 +213,18 @@ Where
 * `what` is either `file` for alphabetical sort or `statement`, `condition` or `function` to sort according to the desired metric.
 * `how` is either `asc` or `desc`
 
+### Get the statistics of a report
+
+    http://localhost:8787/stat/[id]?callback=myCallback
+
+Replace `[id]` with the actual report's id.
+
+The returned JSON has the following structure
+
+* `unused` : number of unused statements
+* `byFile` : object where the key is a file name and the value is the number of unused statements
+* `byPackage` : group unused statements by "package" or folder.
+
 ### Get a file report
 
     http://localhost:8787/r/[id]/file/[fileName]?callback=myCallback
@@ -221,28 +233,28 @@ Slashes in `fileName` must be converted into `+`
 
 The returned JSON contains
 
-*  code : _highlighted_ code
-  * src : array (one entry per line of code) where value are object with
-    * s : source line
-    * l : lineid of the instrumented function
-    * c : list of conditions (array)
-  * fns : object mapping a function id to the generated line of code
-* statements
-  * total : total number of lines,
-  * covered : number of exectuded statement,
-  * detail : coverage detail for every line, how many times that statement was called,
-  * percentage : percentage of covered statements, float 0<>100,
-*  conditions
-  * total : total number of conditions,
-  * coveredTrue : number of conditions evaluated to true,
-  * coveredFalse : number of conditions evaluated to false,
-  * detail : list of conditions that evaluated 'true' or 'false' and 'all' for both
-  * percentage : percentage of conditions evaluated both true and false (100 if no conditions),
-*  functions
-  * total : total number of functions,
-  * covered : number of functions that have been called (including empty functions),
-  * percentage : percentage of functions called,
-  * detail : coverage detail of functions, how many times the function was called
+*  `code` : _highlighted_ code
+  * `src` : array (one entry per line of code) where value are object with
+    * `s` : source line
+    * `l` : lineid of the instrumented function
+    * `c` : list of conditions (array)
+  * `fns` : object mapping a function id to the generated line of code
+* `statements`
+  * `total` : total number of lines,
+  * `covered` : number of exectuded statement,
+  * `detail` : coverage detail for every line, how many times that statement was called,
+  * `percentage` : percentage of covered statements, float 0<>100,
+* `conditions`
+  * `total` : total number of conditions,
+  * `coveredTrue` : number of conditions evaluated to true,
+  * `coveredFalse` : number of conditions evaluated to false,
+  * `detail` : list of conditions that evaluated 'true' or 'false' and 'all' for both
+  * `percentage` : percentage of conditions evaluated both true and false (100 if no conditions),
+* `functions`
+  * `total` : total number of functions,
+  * `covered` : number of functions that have been called (including empty functions),
+  * `percentage` : percentage of functions called,
+  * `detail` : coverage detail of functions, how many times the function was called
 
 ### Merge multiple reports
 
