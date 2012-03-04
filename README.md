@@ -54,6 +54,11 @@ Those dependencies are checked-in inside `node_modules`.
 
 Unit tests run on [Nodeunit](https://github.com/caolan/nodeunit), which is included in the stream as a submodule.
 
+The administrative interface uses for "Stats & Graph" page
+
+* [jQuery](http://jquery.com)
+* [Highcharts](http://www.highcharts.com/) charting library written in JavaScript
+
 ## Usage
     node server.js -d "/var/www" -r "/var/log/reports"
 This creates a server listenig on port `8080` serving the content of your folder `/var/www` and saving coverage reports inside `/var/log/reports`

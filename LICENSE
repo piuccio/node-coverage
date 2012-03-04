@@ -43,4 +43,10 @@ node-coverage includes as dependencies
  	Copyright 2010 James Halliday (mail@substack.net)
  * Nodeunit - MIT license
  	https://github.com/caolan/nodeunit
-    Copyright (c) 2010 Caolan McMahon
+	Copyright (c) 2010 Caolan McMahon
+ * jQuery - MIT license
+ 	http://jquery.com/
+ 	Copyright (c) 2011 John Resig, http://jquery.com/
+ * Highcarts - Creative Commons Attribution-NonCommercial 3.0 License.
+ 	http://www.highcharts.com/
+ 	Copyright (c) 2011 Highsoft
