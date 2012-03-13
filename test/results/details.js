@@ -358,6 +358,27 @@ exports.results = {
 				number : 6,
 				total : 3
 			}
+		},
+		"ternary.js" : {
+			statements : {
+				number : 12,
+				total : 8
+			},
+			conditions : {
+				"true" : {
+					number : 2,
+					total : 2
+				},
+				"false" : {
+					number : 6,
+					total : 6
+				},
+				"all" : 8
+			},
+			functions : {
+				number : 6,
+				total : 2
+			}
 		}
 	},
 

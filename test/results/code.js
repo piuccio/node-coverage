@@ -190,5 +190,17 @@ exports.results = {
 		functions : 6,
 		functionsCalled : 2,
 		functionsPercentage : 100 / 3
+	},
+	"ternary.js" : {
+		total : 12,
+		visited : 7,
+		statementsPercentage : 100 * 7 / 12,
+		conditions : 8,
+		conditionsTrue : 2,
+		conditionsFalse : 6,
+		conditionsPercentage : 50,
+		functions : 6,
+		functionsCalled : 1,
+		functionsPercentage : 100 / 6
 	}
 };

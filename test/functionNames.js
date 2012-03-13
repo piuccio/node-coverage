@@ -51,3 +51,27 @@ exports.fromObjects = function (test) {
 
 	test.done();
 };
+
+exports.ternary = function (test) {
+	test.expect(1);
+
+	fileSystem.statFileOrFolder(["test/names/ternary.js"], "", function (file, code) {
+		var report = helpers.executeCode(file, code);
+
+		var expected = {
+			"outside" : 2,
+			"inside" : 1,
+			"one" : 1,
+			"property" : 2,
+			"another" : 1,
+			"two" : 1
+		};
+
+		var functions = Object.keys(report.files["test/names/ternary.js"].functions.detail);
+		var got = helpers.clusterFunctions(functions);
+
+		test.ok(helpers.objectEquals(expected, got), "Functions don't match");
+	});
+
+	test.done();
+};
