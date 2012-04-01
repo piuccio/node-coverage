@@ -51,6 +51,8 @@ node-coverage works instrumenting your JavaScript code and serving those instrum
 * [Express](https://github.com/visionmedia/express) to serve instrumented files.
 * [Jade](https://github.com/visionmedia/jade) a templating engine to display coverage reports.
 * [mkdirp](https://github.com/substack/node-mkdirp) utility for recursively create directories.
+* [Connect](https://github.com/senchalabs/connect) middleware layer
+* [node-http-proxy](https://github.com/nodejitsu/node-http-proxy) http proxy for node.js
 
 Those dependencies are checked-in inside `node_modules`.
 
@@ -94,6 +96,7 @@ It's also possible to specify a report name from the `submit` function
 * `--function`, `--no-function` Enable or disable function coverage. By default it's disabled.
 * `--session`, `--no-session` Enable or disable session storage for information not strictly needed by the browser. By default it's enabled. Disabling this means that more code is sent to and from the client.
 * `-i` or `--ignore` Ignore file or folder. This file/folder won't be instrumented. Path is relative to document root.
+* `--proxy` Proxy mode. You can use node-coverage to instrument files on a differnt host.
 
 By default function coverage is disabled, to enable it you can run
 
@@ -301,3 +304,17 @@ this function must return an object containing
 
 * `clientCode` the instrumented code, this is sent to the client
 * `highlightedCode` an array of file lines, this matches the original file statements to the corresponding line of code.
+
+## Proxy
+
+node-coverage can also be used as an http proxy to instrument files hosted on a different machine.
+
+    node server.js --proxy -p 8000
+
+Start the instrumentation server in proxy mode. You can configure your browser to use an http proxy targeting `localhost` on port `8000`
+
+You can also enable or disable condition or function coverage using the same options of a standalone server or specify a differnt path where to store coverage reports.
+
+    node server.js --proxy --no-condition -r ~/reports
+
+At the moment it only support http, not https.

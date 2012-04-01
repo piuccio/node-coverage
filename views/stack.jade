@@ -22,6 +22,6 @@ html(lang="en")
 						-var generatedLineNumber = codeReport.fns[fn[2]]
 						tr
 							td
-								a(href="/r/#{name}/file/#{fn[0].replace(/\//g, "+")}") #{fn[0]}
+								a(href="/r/#{name}/file/#{fn[0].replace(/\//g, "%2F")}") #{fn[0]}
 							td=fn[1] + ": " + generatedLineNumber
 							td=codeReport.src[generatedLineNumber].s

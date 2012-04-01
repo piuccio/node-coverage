@@ -30,6 +30,9 @@ var argv = require("optimist")
 	.options("i", {
 		"alias" : "ignore"
 	}).describe("i", "Ignore file or folder. This file/folder won't be instrumented. Path relative to document root")
+	.boolean("proxy")
+		.default("proxy", false)
+		.describe("proxy", "Start the instrumentation server in HTTP proxy mode on port specified by -p.")
 	.argv;
 
 
@@ -48,16 +51,24 @@ if (argv.h) {
 		}
 
 		/* Instrumentation server */
-		require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
-			"function" : argv["function"],
-			"condition" : argv.condition,
-			"doHighlight" : !argv.session,
-			"ignore" : ignore.map(function (path) {
-				if (path.charAt(0) !== "/") {
-					return "/" + path;
-				}
-			})
-		});
+		if (argv.proxy) {
+			require("./lib/server/proxy").start(argv.d, argv.p, argv.r, argv.a, {
+				"function" : argv["function"],
+				"condition" : argv.condition,
+				"doHighlight" : true
+			});
+		} else {
+			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
+				"function" : argv["function"],
+				"condition" : argv.condition,
+				"doHighlight" : !argv.session,
+				"ignore" : ignore.map(function (path) {
+					if (path.charAt(0) !== "/") {
+						return "/" + path;
+					}
+				})
+			});
+		}
 
 		/* Admin server */
 		require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);

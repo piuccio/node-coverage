@@ -1,4 +1,4 @@
-var instrument = require("../lib/instrument");
+var fs = require("../lib/fileSystem");
 
 function generateExpectedObjectStructure () {
 	return {
@@ -49,7 +49,7 @@ var interpreters = [
 exports.sort = function (test) {
 	test.expect(16);
 
-	instrument(interpreters, "a", "b");
+	fs.getInterpreter("a", "b", interpreters).interpret();
 	test.ok(whatWasCalled.all, "all : a");
 	test.ok(!whatWasCalled.js, "js : a");
 	test.ok(!whatWasCalled.content, "content : a");
@@ -57,21 +57,21 @@ exports.sort = function (test) {
 
 
 	whatWasCalled = generateExpectedObjectStructure();
-	instrument(interpreters, "file.js", "content");
+	fs.getInterpreter("file.js", "content", interpreters).interpret();
 	test.ok(!whatWasCalled.all, "all : a");
 	test.ok(whatWasCalled.js, "js : a");
 	test.ok(!whatWasCalled.content, "content : a");
 	test.ok(!whatWasCalled.tpl, "tpl : a");
 
 	whatWasCalled = generateExpectedObjectStructure();
-	instrument(interpreters, "file.js", "content contains myCoolFramework");
+	fs.getInterpreter("file.js", "content contains myCoolFramework", interpreters).interpret();
 	test.ok(!whatWasCalled.all, "all : a");
 	test.ok(!whatWasCalled.js, "js : a");
 	test.ok(whatWasCalled.content, "content : a");
 	test.ok(!whatWasCalled.tpl, "tpl : a");
 
 	whatWasCalled = generateExpectedObjectStructure();
-	instrument(interpreters, "file.tpl", "content contains myCoolFramework");
+	fs.getInterpreter("file.tpl", "content contains myCoolFramework", interpreters).interpret();
 	test.ok(!whatWasCalled.all, "all : a");
 	test.ok(!whatWasCalled.js, "js : a");
 	test.ok(!whatWasCalled.content, "content : a");

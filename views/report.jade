@@ -52,7 +52,7 @@ html(lang="en")
 					each single in report.files
 						tr
 							td
-								a(href="/r/#{name}/file/#{single.file.replace(/\//g, "+")}") #{single.file}
+								a(href="/r/#{name}/file/#{single.file.replace(/\//g, "%2F")}") #{single.file}
 							
 							-var percentage = single.report.statements.percentage
 							if percentage < 30
