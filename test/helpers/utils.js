@@ -1,5 +1,6 @@
 var vm = require("vm");
 var report = require("../../lib/report");
+var path = require("path");
 
 exports.executeCode = function (file, code, globals) {
 	var serialized;
@@ -22,10 +23,11 @@ exports.executeCode = function (file, code, globals) {
 };
 
 exports.shortName = function (fileName) {
-	return fileName.substring(fileName.lastIndexOf("/") + 1);
+	return path.basename(fileName);
 };
 
 exports.assertCoverageEquals = function (measured, expected, file, testObject) {
+
 	var statementCoverage = measured.statements;
 	testObject.equal(statementCoverage.total, expected.total, "total statements " + file);
 	testObject.equal(statementCoverage.covered, expected.visited, "covered statements " + file);
