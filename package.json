@@ -1,5 +1,9 @@
 {
     "author" : "Fabio Crisci <fabio.crisci@gmail.com>",
+    "contributors" : [{
+        "name" : "David Emmanuel Divernois",
+        "email" : "david-emmanuel.divernois@amadeus.com"
+    }],
     "name" : "node-coverage",
     "description" : "node-coverage is a tool that measures code coverage of JavaScript application.",
     "version" : "1.0.0",
@@ -16,9 +20,9 @@
     "dependencies" : {
         "optimist" : ">=0.3.1",
         "uglify-js" : ">=1.2.5",
-        "connect" : ">=1.8.6",
+        "connect" : "1.x",
         "connect-restreamer" : ">=1.0.0",
-        "express" : ">=2.5.11",
+        "express" : "2.x",
         "http-proxy" : ">=0.8.0",
         "jade" : ">=0.20.3",
         "mkdirp" : ">=0.3.0"
@@ -28,5 +32,6 @@
     },
     "scripts" : {
         "test" : "node instrument.js -t"
-    }
+    },
+    "license" : "MIT"
 }
