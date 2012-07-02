@@ -54,9 +54,11 @@ node-coverage works instrumenting your JavaScript code and serving those instrum
 * [Connect](https://github.com/senchalabs/connect) middleware layer
 * [node-http-proxy](https://github.com/nodejitsu/node-http-proxy) http proxy for node.js
 
-Those dependencies are checked-in inside `node_modules`.
+Those dependencies can be installed (from the node-coverage directory) with:
 
-Unit tests run on [Nodeunit](https://github.com/caolan/nodeunit), which is included in the stream as a submodule.
+    npm install
+
+Unit tests run on [Nodeunit](https://github.com/caolan/nodeunit).
 
 The administrative interface uses for "Stats & Graph" page
 
@@ -161,11 +163,6 @@ copies and instrument all files inside `myApp` excluding `.git` which is not cop
 #### Unit Test
 
 In order to run unit tests after cloning this repository you need to run
-
-    git submodule init
-    git submodule update
-
-and after that
 
     node instrument.js -t
 
