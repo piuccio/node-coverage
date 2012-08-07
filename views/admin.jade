@@ -2,7 +2,7 @@
 html(lang="en")
 	head
 		title node-coverage Admin Interface
-		link(rel="stylesheet", href="/style.css")
+		link(rel="stylesheet", href="#{serverRoot}/style.css")
 	body
 		h3.header node-coverage 
 			em=conf.htdoc
@@ -13,19 +13,21 @@ html(lang="en")
 			table.reports
 				thead
 					tr
-						th.merge 
-							input(type="submit", value="Merge")
+						-if (canMerge)
+							th.merge
+								input(type="submit", value="Merge")
 						th Report
 						th Date
 						th Function stack
 				tbody
 					each report in reports
 						tr
+							-if (canMerge)
+								td
+									input(type="checkbox", name="report", value=report.id)
 							td
-								input(type="checkbox", name="report", value=report.id)
-							td
-								a(href="/r/#{report.id}") #{report.id}
+								a(href="#{serverRoot}/r/#{report.id}") #{report.id}
 							td
 								em=report.date
 							td
-								a(href="/fn/#{report.id}") view
+								a(href="#{serverRoot}/fn/#{report.id}") view
