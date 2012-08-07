@@ -2,7 +2,7 @@
 html(lang="en")
 	head
 		title node-coverage Admin Interface
-		link(rel="stylesheet", href="/style.css")
+		link(rel="stylesheet", href="#{serverRoot}/style.css")
 	body
 		h3.header node-coverage 
 			em=name
@@ -23,36 +23,36 @@ html(lang="en")
 					tr.partial
 						th
 						th(colspan=3).flap 
-							a(href="/stat/#{name}") Stats & Graphs
+							a(href="#{serverRoot}/stat/#{name}") Stats & Graphs
 					tr
 						-var isSorted = sort.what=="file"
 						th(class=isSorted ? "sorted" : "")
-							a(href="/r/#{name}/sort/file/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) File 
+							a(href="#{serverRoot}/r/#{name}/sort/file/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) File
 							-if (isSorted)
 								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
 						
 						-var isSorted = sort.what=="statement"
 						th(class=isSorted ? "sorted" : "")
-							a(href="/r/#{name}/sort/statement/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Statement 
+							a(href="#{serverRoot}/r/#{name}/sort/statement/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Statement
 							-if (isSorted)
 								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
 						
 						-var isSorted = sort.what=="condition"
 						th(class=isSorted ? "sorted" : "")
-							a(href="/r/#{name}/sort/condition/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Condition 
+							a(href="#{serverRoot}/r/#{name}/sort/condition/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Condition
 							-if (isSorted)
 								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
 						
 						-var isSorted = sort.what=="function"
 						th(class=isSorted ? "sorted" : "")
-							a(href="/r/#{name}/sort/function/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Function 
+							a(href="#{serverRoot}/r/#{name}/sort/function/"+(sort.how == "asc" || !isSorted ? "desc" : "asc")) Function
 							-if (isSorted)
 								span.sort-direction=sort.how == "asc" ? "&uarr;" : "&darr;"
 				tbody
 					each single in report.files
 						tr
 							td
-								a(href="/r/#{name}/file/#{single.file.replace(/\//g, "%2F")}") #{single.file}
+								a(href="#{serverRoot}/r/#{name}/file/#{single.file.replace(/\//g, "%2F")}") #{single.file}
 							
 							-var percentage = single.report.statements.percentage
 							if percentage < 30

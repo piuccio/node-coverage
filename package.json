@@ -1,7 +1,7 @@
 {
     "author" : "Fabio Crisci <fabio.crisci@gmail.com>",
     "contributors" : [{
-        "name" : "David Emmanuel Divernois",
+        "name" : "David-Emmanuel Divernois",
         "email" : "david-emmanuel.divernois@amadeus.com"
     }],
     "name" : "node-coverage",
