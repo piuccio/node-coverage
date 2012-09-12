@@ -44,7 +44,7 @@ if (argv.h) {
 		if (!stat.isDirectory()) {
 			throw new Error(argv.r + " is not a directory");
 		}
-
+		
 		var ignore = argv.i || [];
 		if (!ignore.forEach) {
 			ignore = [ignore];
@@ -65,6 +65,8 @@ if (argv.h) {
 				"ignore" : ignore.map(function (path) {
 					if (path.charAt(0) !== "/") {
 						return "/" + path;
+					} else {
+						return path;
 					}
 				})
 			});
