@@ -33,6 +33,7 @@ var argv = require("optimist")
 	.boolean("proxy")
 		.default("proxy", false)
 		.describe("proxy", "Start the instrumentation server in HTTP proxy mode on port specified by -p.")
+	.boolean("v").alias("v", "verbose").default("v", false)
 	.argv;
 
 
@@ -51,14 +52,19 @@ if (argv.h) {
 		}
 
 		/* Instrumentation server */
+		var config;
 		if (argv.proxy) {
-			require("./lib/server/proxy").start(argv.d, argv.p, argv.r, argv.a, {
+			config = {
 				"function" : argv["function"],
 				"condition" : argv.condition,
-				"doHighlight" : true
-			});
+				"doHighlight" : true,
+				"verbose" : argv.v
+			};
+			require("./lib/server/proxy").start(argv.d, argv.p, argv.r, argv.a, config);
+			
+			console.log("Starting proxy server on port ", argv.p);
 		} else {
-			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, {
+			config = {
 				"function" : argv["function"],
 				"condition" : argv.condition,
 				"doHighlight" : !argv.session,
@@ -68,12 +74,21 @@ if (argv.h) {
 					} else {
 						return path;
 					}
-				})
-			});
+				}),
+				"verbose" : argv.v
+			};
+			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, config);
+			
+			console.log("Starting server on port", argv.p);
 		}
 
 		/* Admin server */
 		require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
+		console.log("Starting administration interface on port", argv.a);
+		
+		if (argv.v) {
+			console.log("Server configuration", config);
+		}
 	} catch (ex) {
 		console.error("Please specify a valid report directory", ex);
 	}
