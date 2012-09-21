@@ -1,46 +1,50 @@
 {
-	"author" : "Fabio Crisci <fabio.crisci@gmail.com>",
-	"contributors" : [{
-				"name" : "David-Emmanuel Divernois",
-				"email" : "david-emmanuel.divernois@amadeus.com"
-			}, {
-				"name" : "Francesco Longo",
-				"email" : "francesco.longo@amadeus.com"
-			}, {
-				"name" : "Fabiano Bernardo",
-				"email" : "f.bernardo.it@gmail.com"
-			}],
-	"name" : "node-coverage",
-	"description" : "node-coverage is a tool that measures code coverage of JavaScript application.",
-	"version" : "1.0.0",
-	"homepage" : "https://github.com/piuccio/node-coverage",
-	"repository" : {
-		"type" : "git",
-		"url" : "git://github.com/piuccio/node-coverage.git"
-	},
-	"main" : "./index",
-	"bin" : {
-		"node-coverage-instrument" : "./instrument.js",
-		"node-coverage" : "./server.js"
-	},
-	"dependencies" : {
-		"optimist" : "~0.3.1",
-		"uglify-js" : "~1.2.5",
-		"connect" : "1.x",
-		"connect-restreamer" : "~1.0.0",
-		"express" : "2.x",
-		"http-proxy" : "~0.8.0",
-		"jade" : "~0.20",
-		"mkdirp" : "~0.3.0"
-	},
-	"devDependencies" : {
-		"nodeunit" : "~0.6.4"
-	},
-	"scripts" : {
-		"test" : "node instrument.js -t"
-	},
-	"license" : "MIT",
-	"engines" : {
-		"node" : ">=0.6.0"
-	}
+  "author": "Fabio Crisci <fabio.crisci@gmail.com>",
+  "contributors": [
+    {
+      "name": "David-Emmanuel Divernois",
+      "email": "david-emmanuel.divernois@amadeus.com"
+    },
+    {
+      "name": "Francesco Longo",
+      "email": "francesco.longo@amadeus.com"
+    },
+    {
+      "name": "Fabiano Bernardo",
+      "email": "f.bernardo.it@gmail.com"
+    }
+  ],
+  "name": "node-coverage",
+  "description": "node-coverage is a tool that measures code coverage of JavaScript application.",
+  "version": "1.0.1",
+  "homepage": "https://github.com/piuccio/node-coverage",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/piuccio/node-coverage.git"
+  },
+  "main": "./index",
+  "bin": {
+    "node-coverage-instrument": "./instrument.js",
+    "node-coverage": "./server.js"
+  },
+  "dependencies": {
+    "optimist": "~0.3.1",
+    "uglify-js": "~1.2.5",
+    "connect": "1.x",
+    "connect-restreamer": "~1.0.0",
+    "express": "2.x",
+    "http-proxy": "~0.8.0",
+    "jade": "~0.20",
+    "mkdirp": "~0.3.0"
+  },
+  "devDependencies": {
+    "nodeunit": "~0.6.4"
+  },
+  "scripts": {
+    "test": "node instrument.js -t"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6.0"
+  }
 }
