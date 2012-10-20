@@ -15,6 +15,7 @@ var argv = require("optimist")
 	.options("i", {
 		"alias" : "ignore"
 	}).describe("i", "Ignore file or folder. This file/folder is copied in target folder but not instrumented. Path relative to the source folder")
+	.boolean("v").alias("v", "verbose").default("v", false)
 	.argv;
 
 
@@ -53,7 +54,8 @@ function instrumentFolder (source, destination, options) {
 			"condition" : options["condition"],
 			"doHighlight" : true,
 			"exclude" : options.exclude,
-			"ignore" : options.ignore
+			"ignore" : options.ignore,
+			"verbose" : options.verbose
 		});
 	} catch (ex) {
 		require("optimist").showHelp();
@@ -69,6 +71,7 @@ function instrumentFile (fileName, options) {
 	fileSystem.statFileOrFolder([fileName], "", callback, {
 		"function" : options["function"],
 		"condition" : options["condition"],
-		"doHighlight" : true
+		"doHighlight" : true,
+		"verbose" : options.verbose
 	});
 };
