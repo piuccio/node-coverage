@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" type="text/css" href="/views/statics/style.css" />
+
+  <title>node-coverage Admin Interface</title>
+
+  <script type="text/javascript">
+  	var Aria = {
+		debug : true
+	};
+  </script>
+
+  <script type="text/javascript" src="/aria-templates/aria/bootstrap.js"></script>
+  <script type="text/javascript" src="/aria-templates/aria/css/atskin.js"></script>
+</head>
+<body>
+	<div id="container"></div>
+
+	<script type="text/javascript">
+	(function () {
+		Aria.rootFolderPath += "../";
+		aria.core.DownloadMgr.updateRootMap({
+			"aria" : {
+				"*" : Aria.rootFolderPath + "aria-templates/"
+			}
+		});
+
+		var width = {min : 180};
+		var height = {min : 342};
+
+		// set the minimum dimension of this page
+		Aria.setRootDim({
+			width: width,
+			height: height
+		});
+
+		Aria.loadTemplate({
+			classpath : "views.Layout",
+			div : "container",
+			width : width,
+			height : height,
+			moduleCtrl: {
+				classpath: "views.Controller"
+			}
+		});
+	})()
+	</script>
+</body>
+</html>

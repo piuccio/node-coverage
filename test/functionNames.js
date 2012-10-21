@@ -1,12 +1,9 @@
 var helpers = require("./helpers/utils");
-var fileSystem = require("../lib/fileSystem");
 
 exports.fromVariables = function (test) {
 	test.expect(1);
 
-	fileSystem.statFileOrFolder(["test/names/variables.js"], "", function (file, code) {
-		var report = helpers.executeCode(file, code);
-
+	helpers.run("test/names/variables.js", function (test, file, code, report) {
 		var expected = {
 			"(?)" : 1,
 			"glob" : 1,
@@ -22,18 +19,14 @@ exports.fromVariables = function (test) {
 		var got = helpers.clusterFunctions(functions);
 
 		test.ok(helpers.objectEquals(expected, got), "Functions don't match");
-	});
-
-	test.done();
+	}, test);
 };
 
 
 exports.fromObjects = function (test) {
 	test.expect(1);
 
-	fileSystem.statFileOrFolder(["test/names/objects.js"], "", function (file, code) {
-		var report = helpers.executeCode(file, code);
-
+	helpers.run("test/names/objects.js", function (test, file, code, report) {
 		var expected = {
 			"withName" : 1,
 			"first" : 1,
@@ -47,17 +40,13 @@ exports.fromObjects = function (test) {
 		var got = helpers.clusterFunctions(functions);
 
 		test.ok(helpers.objectEquals(expected, got), "Functions don't match");
-	});
-
-	test.done();
+	}, test);
 };
 
 exports.ternary = function (test) {
 	test.expect(1);
 
-	fileSystem.statFileOrFolder(["test/names/ternary.js"], "", function (file, code) {
-		var report = helpers.executeCode(file, code);
-
+	helpers.run("test/names/ternary.js", function (test, file, code, report) {
 		var expected = {
 			"outside" : 2,
 			"inside" : 1,
@@ -71,7 +60,5 @@ exports.ternary = function (test) {
 		var got = helpers.clusterFunctions(functions);
 
 		test.ok(helpers.objectEquals(expected, got), "Functions don't match");
-	});
-
-	test.done();
+	}, test);
 };

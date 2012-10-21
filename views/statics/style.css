@@ -199,6 +199,10 @@ tr.partially-covered td {
 .small td:nth-child(3), .small th:nth-child(3),
 .small td:nth-child(4), .small th:nth-child(4) {
 	font-size: 75%;
+	text-align: center;
+}
+.small th:last-child {
+	border-right: 1px solid #CCC;
 }
 .legend {
 	font-size: 75%;
@@ -211,16 +215,9 @@ dt {
 dd {
 	padding-left: 12px;
 }
-.sort-direction {
-	font-size : 95%;
-}
-.sorted {
-	font-weight: bold;
-}
 .merge {
 	width : 3em;
 }
-
 .chart {
 	margin-bottom : 30px;
 }

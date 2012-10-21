@@ -30,15 +30,18 @@
   "dependencies": {
     "optimist": "~0.3.1",
     "uglify-js": "~1.2.5",
-    "connect": "1.x",
+    "connect": "2.x",
     "connect-restreamer": "~1.0.0",
-    "express": "2.x",
+    "express": "3.x",
     "http-proxy": "~0.8.0",
-    "jade": "~0.20",
-    "mkdirp": "~0.3.0"
+    "mkdirp": "~0.3.0",
+    "ariatemplates" : "~1.2.6",
+    "q" : "~0.8.9",
+    "glob" : "~3.1.14"
   },
   "devDependencies": {
-    "nodeunit": "~0.6.4"
+    "nodeunit": "~0.6.4",
+    "rimraf" : "~2.0.2"
   },
   "scripts": {
     "test": "node instrument.js -t"

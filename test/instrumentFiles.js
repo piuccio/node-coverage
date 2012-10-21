@@ -1,9 +1,9 @@
-var fileSystem = require("../lib/fileSystem");
+var helpers = require("./helpers/utils");
 var path = require("path");
 var clientCode = require("../lib/clientCode");
 
-function createInstrumentCallback (container) {
-	return function (file, code) {
+function createCallback (container) {
+	return function (test, file, code) {
 		var isJs = (path.extname(file) === ".js");
 
 		container[file] = isJs ? {
@@ -25,23 +25,21 @@ exports.exclude = function (test) {
 
 	var instrumented = {};
 
-	fileSystem.statFileOrFolder(["."], "", createInstrumentCallback(instrumented), options);
+	helpers.run("**", createCallback(instrumented), test, options, function (test) {
+		var allFiles = Object.keys(instrumented);
 
-	var allFiles = Object.keys(instrumented);
+		test.expect(Math.max(allFiles.length * 3, 20));
 
-	test.expect(Math.max(allFiles.length * 3, 20));
+		allFiles.forEach(function (fileName) {
+			test.equals(fileName.indexOf(".git"), -1, "Found a file in exlude folder " + fileName);
+			test.equals(fileName.indexOf("node_modules"), -1, "Found a file in exlude folder " + fileName);
+			test.equals(fileName.indexOf("views/statics"), -1, "Found a file in exlude folder " + fileName);
 
-	allFiles.forEach(function (fileName) {
-		test.equals(fileName.indexOf(".git"), -1, "Found a file in exlude folder " + fileName);
-		test.equals(fileName.indexOf("node_modules"), -1, "Found a file in exlude folder " + fileName);
-		test.equals(fileName.indexOf("views/statics"), -1, "Found a file in exlude folder " + fileName);
-
-		if (fileName.indexOf("instrumentFiles") > 0) {
-			test.ok(false, "instrumentFiles was included");
-		}
-	});
-
-	test.done();
+			if (fileName.indexOf("instrumentFiles") > 0) {
+				test.ok(false, "instrumentFiles was included");
+			}
+		});
+	}, false);
 };
 
 exports.ignore = function (test) {
@@ -52,33 +50,31 @@ exports.ignore = function (test) {
 
 	var instrumented = {};
 
-	fileSystem.statFileOrFolder(["."], "", createInstrumentCallback(instrumented), options);
+	helpers.run("**", createCallback(instrumented), test, options, function (test) {
+		var allFiles = Object.keys(instrumented);
 
-	var allFiles = Object.keys(instrumented);
+		test.expect(Math.max(allFiles.length * 4, 20));
 
-	test.expect(Math.max(allFiles.length * 4, 20));
+		allFiles.forEach(function (fileName) {
+			test.equals(fileName.indexOf(".git"), -1, "Found a file in exlude folder " + fileName);
+			test.equals(fileName.indexOf("node_modules"), -1, "Found a file in exlude folder " + fileName);
+			test.equals(fileName.indexOf("views/statics"), -1, "Found a file in exlude folder " + fileName);
 
-	allFiles.forEach(function (fileName) {
-		test.equals(fileName.indexOf(".git"), -1, "Found a file in exlude folder " + fileName);
-		test.equals(fileName.indexOf("node_modules"), -1, "Found a file in exlude folder " + fileName);
-		test.equals(fileName.indexOf("views/statics"), -1, "Found a file in exlude folder " + fileName);
+			var wasIgnoredIfNeeded = true;
+			var descriptor = instrumented[fileName];
+			if (descriptor.isJs && fileName.indexOf("test/code") === 0) {
+				if (!descriptor.hasHeader) {
+					// no header : will be instrumented by the server
+					wasIgnoredIfNeeded = false;
+				}
 
-		var wasIgnoredIfNeeded = true;
-		var descriptor = instrumented[fileName];
-		if (descriptor.isJs && fileName.indexOf("test/code") === 0) {
-			if (!descriptor.hasHeader) {
-				// no header : will be instrumented by the server
-				wasIgnoredIfNeeded = false;
+				if (descriptor.hasStatement) {
+					// has instrumentation code
+					wasIgnoredIfNeeded = false;
+				}
 			}
 
-			if (descriptor.hasStatement) {
-				// has instrumentation code
-				wasIgnoredIfNeeded = false;
-			}
-		}
-
-		test.ok(wasIgnoredIfNeeded, "File was not ignored " + fileName);
-	});
-
-	test.done();
+			test.ok(wasIgnoredIfNeeded, "File was not ignored " + fileName);
+		});
+	}, false);
 };

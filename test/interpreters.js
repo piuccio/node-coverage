@@ -1,4 +1,4 @@
-var fs = require("../lib/fileSystem");
+var interpreters = require("../lib/interpreters");
 
 function generateExpectedObjectStructure () {
 	return {
@@ -10,7 +10,7 @@ function generateExpectedObjectStructure () {
 }
 
 var whatWasCalled = generateExpectedObjectStructure();
-var interpreters = [
+var list = [
 	{
 		filter : {
 			files : /.*/
@@ -49,7 +49,7 @@ var interpreters = [
 exports.sort = function (test) {
 	test.expect(16);
 
-	fs.getInterpreter("a", "b", interpreters).interpret();
+	interpreters.getInterpreter("a", "b", list).interpret();
 	test.ok(whatWasCalled.all, "all : a");
 	test.ok(!whatWasCalled.js, "js : a");
 	test.ok(!whatWasCalled.content, "content : a");
@@ -57,21 +57,21 @@ exports.sort = function (test) {
 
 
 	whatWasCalled = generateExpectedObjectStructure();
-	fs.getInterpreter("file.js", "content", interpreters).interpret();
+	interpreters.getInterpreter("file.js", "content", list).interpret();
 	test.ok(!whatWasCalled.all, "all : a");
 	test.ok(whatWasCalled.js, "js : a");
 	test.ok(!whatWasCalled.content, "content : a");
 	test.ok(!whatWasCalled.tpl, "tpl : a");
 
 	whatWasCalled = generateExpectedObjectStructure();
-	fs.getInterpreter("file.js", "content contains myCoolFramework", interpreters).interpret();
+	interpreters.getInterpreter("file.js", "content contains myCoolFramework", list).interpret();
 	test.ok(!whatWasCalled.all, "all : a");
 	test.ok(!whatWasCalled.js, "js : a");
 	test.ok(whatWasCalled.content, "content : a");
 	test.ok(!whatWasCalled.tpl, "tpl : a");
 
 	whatWasCalled = generateExpectedObjectStructure();
-	fs.getInterpreter("file.tpl", "content contains myCoolFramework", interpreters).interpret();
+	interpreters.getInterpreter("file.tpl", "content contains myCoolFramework", list).interpret();
 	test.ok(!whatWasCalled.all, "all : a");
 	test.ok(!whatWasCalled.js, "js : a");
 	test.ok(!whatWasCalled.content, "content : a");

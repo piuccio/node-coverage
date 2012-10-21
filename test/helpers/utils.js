@@ -1,8 +1,47 @@
+/**
+ * Utilities functions needed to simplify test logic.
+ */
 var vm = require("vm");
 var report = require("../../lib/report");
 var path = require("path");
+var fileSystem = require("../../lib/fileSystem");
+var instrument = require("../../lib/instrument");
 
-exports.executeCode = function (file, code, globals) {
+/**
+ * Execute a given callback on a pattern of files. This will read the file,
+ * instrument the code, execute it in a simulated context and return the
+ * generated report.
+ * It also handles the promise returned by fileSystem in order to end the test cleanly
+ *
+ * @param {String} pattern Glob pattern
+ * @param {Function} callback Function executed on every file
+ * @param {Object} test Test object from nodeunit
+ * @param {Object} options [Optional] Parameters for the interpret function
+ * @param {Function} then [Optional] Function to be called in the 'then' callback
+ */
+exports.run = function (pattern, callback, test, options, then, run) {
+	fileSystem.perform(pattern, function (error, file, code) {
+		if (error) {
+			// Inside the if to avoid incrementing the assert counter
+			test.ifError(error);
+		}
+		var code = instrument(file, code, options).clientCode;
+
+		var report = run !== false ? executeCode(file, code) : null;
+		callback(test, file, code, report, options);
+	}, options).then(function () {
+		if (then) {
+			then(test);
+		}
+		test.done()
+	}, function (error) {
+		test.ifError(error);
+		test.ok(false, "Perform action failed");
+		test.done();
+	});
+};
+
+exports.executeCode = executeCode = function (file, code, globals) {
 	var serialized;
 	var sandbox = {
 		XMLHttpRequest : function () {

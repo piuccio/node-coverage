@@ -1,6 +1,5 @@
 var helpers = require("./helpers/utils");
 var report = require("../lib/report");
-var fileSystem = require("../lib/fileSystem");
 
 var expectedCoverage = require("./results/reports").results;
 var expectedDetails = require("./results/details").results;
@@ -17,34 +16,27 @@ var asserts = Object.keys(expectedCoverage[files[0]]);
 //    once for every file merged with itself
 var totalAssertsPerTest = (15 * asserts.length) + (5 * 9);
 
-function measureCoverage (file, code) {
-	var generatedReport = helpers.executeCode(file, code);
+function measureCoverage (test, file, code, report) {
 	var shortFileName = helpers.shortName(file);
 
 	var expected = expectedCoverage[shortFileName];
-	generatedReports[shortFileName] = generatedReport;
+	generatedReports[shortFileName] = report;
 
-	helpers.assertCoverageEquals(generatedReport.files[file], expected, file, testObject);
-	helpers.assertCoverageEquals(generatedReport.global, expected, file, testObject);
-
-	waitingFiles -= 1;
-	if (waitingFiles < 1) {
-		assertMerge();
-		testObject.done();
-	}
+	helpers.assertCoverageEquals(report.files[file], expected, file, test);
+	helpers.assertCoverageEquals(report.global, expected, file, test);
 };
 
-function assertMerge () {
-	merge_1_and_2(testObject);
+function assertMerge (test) {
+	merge_1_and_2(test);
 
-	merge_with_itself("test/reports/file1.js", testObject);
+	merge_with_itself("test/reports/file1.js", test);
 
-	merge_with_itself("test/reports/file2.js", testObject);
+	merge_with_itself("test/reports/file2.js", test);
 
-	merge_with_itself("test/reports/file3.js", testObject);
+	merge_with_itself("test/reports/file3.js", test);
 };
 
-function merge_1_and_2 (testObject) {
+function merge_1_and_2 (test) {
 	var merged = report.mergeReports([
 		generatedReports["file1.js"], generatedReports["file2.js"]
 	]);
@@ -53,27 +45,27 @@ function merge_1_and_2 (testObject) {
 	for (var fileName in merged.files) {
 		var shortFileName = helpers.shortName(fileName);
 
-		helpers.assertCoverageEquals(merged.files[fileName], expectedCoverage[shortFileName], shortFileName, testObject);
+		helpers.assertCoverageEquals(merged.files[fileName], expectedCoverage[shortFileName], shortFileName, test);
 
-		helpers.assertDetailsEquals(merged.files[fileName], expectedDetails.merge[shortFileName], shortFileName, testObject);
+		helpers.assertDetailsEquals(merged.files[fileName], expectedDetails.merge[shortFileName], shortFileName, test);
 	}
-	helpers.assertCoverageEquals(merged.global, expectedCoverage["merge_1_2"], "merge_1_2", testObject);
+	helpers.assertCoverageEquals(merged.global, expectedCoverage["merge_1_2"], "merge_1_2", test);
 };
 
-function merge_with_itself (fileName, testObject) {
+function merge_with_itself (fileName, test) {
 	var shortFileName = helpers.shortName(fileName);
 	var merged = report.mergeReports([
 		generatedReports[shortFileName], generatedReports[shortFileName]
 	]);
 
-	helpers.assertCoverageEquals(merged.files[fileName], expectedCoverage[shortFileName], "merge_" + shortFileName, testObject);
-	helpers.assertCoverageEquals(merged.global, expectedCoverage[shortFileName], "global_" + shortFileName, testObject);
+	helpers.assertCoverageEquals(merged.files[fileName], expectedCoverage[shortFileName], "merge_" + shortFileName, test);
+	helpers.assertCoverageEquals(merged.global, expectedCoverage[shortFileName], "global_" + shortFileName, test);
 
-	helpers.assertDetailsEquals(merged.files[fileName], expectedDetails.mergeSelf[shortFileName], "merge_" + shortFileName, testObject);
+	helpers.assertDetailsEquals(merged.files[fileName], expectedDetails.mergeSelf[shortFileName], "merge_" + shortFileName, test);
 };
 
 
-function mergeSpecial (file, code) {
+function mergeSpecial (test, file, code) {
 	// Run file3 with different global variables -> different paths
 	var generatedReportTrue = helpers.executeCode(file, code, {
 		thisIsAGlobalVariable : false
@@ -91,26 +83,22 @@ function mergeSpecial (file, code) {
 		generatedReportTrue, generatedReportFalse
 	]);
 
-	helpers.assertCoverageEquals(merged.files[file], specialCoverage, "special", testObject);
-	helpers.assertCoverageEquals(merged.global, specialCoverage, "global special", testObject);
+	helpers.assertCoverageEquals(merged.files[file], specialCoverage, "special", test);
+	helpers.assertCoverageEquals(merged.global, specialCoverage, "global special", test);
 
-	helpers.assertDetailsEquals(merged.files[file], specialDetails, "details special", testObject);
-	
-	testObject.done();
+	helpers.assertDetailsEquals(merged.files[file], specialDetails, "details special", test);
 };
 
-var testObject;
-var waitingFiles = 3;
 var generatedReports = {};
 
 exports.mergeResults = function (test) {
 	test.expect(totalAssertsPerTest);
 
-	testObject = test;
-
-	fileSystem.instrumentFolder("test/reports", "", measureCoverage, {
+	helpers.run("test/reports/**", measureCoverage, test, {
 		"function" : true,
 		"condition" : true
+	}, function (test) {
+		assertMerge(test);
 	});
 };
 
@@ -118,9 +106,7 @@ exports.differentGlobals = function (test) {
 	// this special test does 2 assertCoverageEquals and 1 assertDetailsEquals
 	test.expect(2 * asserts.length + 9);
 
-	testObject = test;
-
-	fileSystem.instrumentFile("test/reports/file3.js", "", mergeSpecial, {
+	helpers.run("test/reports/file3.js", mergeSpecial, test, {
 		"function" : true,
 		"condition" : true
 	});
