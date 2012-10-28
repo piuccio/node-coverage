@@ -104,7 +104,8 @@
 	{var percentage = 0 /}
 	<tr>
 		<td>
-			<a href="/report/${data.reportName}/file/${encodeReportName(single.file)}">${single.file}</a>
+			{var href = moduleCtrl.getFileUrl(single.file) /}
+			<a href="${href}" data-href="${href}" {on click "getFile" /}>${single.file}</a>
 		</td>
 
 		{set percentage = single.report.statements.percentage /}

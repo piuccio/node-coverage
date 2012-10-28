@@ -3,16 +3,20 @@
 	$hasScript : true
 }}
 {macro main()}
-{section {
-	id : "header",
-	type : "h3",
-	attributes : {
-		classList : ["header"]
-	},
-	macro : "header"
-}/}
+{if !data.error}
+	{section {
+		id : "header",
+		type : "h3",
+		attributes : {
+			classList : ["header"]
+		},
+		macro : "header"
+	}/}
 
-{@aria:Template moduleCtrl.getModule() /}
+	{@aria:Template moduleCtrl.getModule() /}
+{else /}
+	#MODULE ERROR#
+{/if}
 {/macro}
 
 {macro header()}

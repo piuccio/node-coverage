@@ -5,6 +5,8 @@ Aria.classDefinition({
 	$prototype : {
 		$publicInterfaceName : "views.lib.IBaseController",
 
+		lastAction : "_no_action_",
+
 		/**
 		 * Default init implementation, it makes a json request to the server
 		 * targetting the action returned by this.getAction
@@ -15,16 +17,28 @@ Aria.classDefinition({
 				request : initArgs.args
 			};
 
-			aria.core.IO.asyncRequest({
-				url : this.getAction(),
-				callback : {
-					fn : this._requestSuccess,
-					scope : this,
-					onerror : this._requestError,
-					args : callback
-				},
-				expectedResponseType : "json"
-			});
+			this.callAction(initArgs, callback);
+		},
+
+		callAction : function (initArgs, callback) {
+			var action = this.getAction();
+
+			if (action !== this.lastAction) {
+				this.lastAction = action;
+
+				aria.core.IO.asyncRequest({
+					url : action,
+					callback : {
+						fn : this._requestSuccess,
+						scope : this,
+						onerror : this._requestError,
+						args : callback
+					},
+					expectedResponseType : "json"
+				});
+			} else {
+				this.sameAction(callback);
+			}
 		},
 
 		_requestSuccess : function (resources, initCb) {
@@ -44,11 +58,20 @@ Aria.classDefinition({
 		parseResponse : Aria.empty,
 
 		navigate : function (url) {
-			if (history) {
-				window.location = url;
-			} else {
-				window.location = url;
-			}
+			this.$raiseEvent({
+				name : "navigate",
+				url : url
+			});
+		},
+
+		updateState : function (initArgs, callback) {
+			this.json.setValue(this._data, "request", initArgs.args);
+
+			this.callAction(initArgs, callback);
+		},
+
+		sameAction : function (callback) {
+			this.$callback(callback);
 		}
 	}
 });

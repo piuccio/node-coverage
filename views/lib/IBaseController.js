@@ -7,6 +7,10 @@ Aria.interfaceDefinition({
 	$interface : {
 		navigate : {
 			$type : "Function"
+		},
+
+		updateState : {
+			$type : "Function"
 		}
 	}
 });

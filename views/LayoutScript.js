@@ -5,6 +5,12 @@ Aria.tplScriptDefinition({
 			if (evt.name === "stateChange") {
 				this.$refresh();
 			}
+		},
+
+		onModuleEvent : function (evt) {
+			if (evt.name === "stateChange") {
+				this.$refresh();
+			}
 		}
 	}
 });

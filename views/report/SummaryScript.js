@@ -15,10 +15,6 @@ Aria.tplScriptDefinition({
 			}
 		},
 
-		encodeReportName : function (name) {
-			return name.replace(/\//g, "%2F");
-		},
-
 		initView : function (view) {
 			var sortDirection = aria.templates.View.SORT_ASCENDING;
 			view.setSort(sortDirection, "file", this.getSortMethod("file"));
@@ -50,7 +46,6 @@ Aria.tplScriptDefinition({
 		},
 
 		isCovered : function (loc) {
-			console.log(loc);
 			if (loc.l) {
 				return this.data.report.statements.detail[loc.l] > 0;
 			} else {
@@ -101,6 +96,14 @@ Aria.tplScriptDefinition({
 				"false" : missing["false"].join(", "),
 				"class" : className
 			};
+		},
+
+		getFile : function (evt) {
+			evt.preventDefault(true);
+
+			var href = evt.target.getData("href");
+
+			this.moduleCtrl.navigate(href);
 		}
 	}
 });
