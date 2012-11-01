@@ -5,7 +5,7 @@
 {createView reports on data.reports /}
 {macro main()}
 <form class="content" action="merge" method="GET">
-	<h4>Reports from <em>VARIABLE</em></h4>
+	<h4>Reports from <em>${data.conf.reportFolder}</em></h4>
 
 	<table class="reports">
 		<thead>

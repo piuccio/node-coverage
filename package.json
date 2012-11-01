@@ -37,7 +37,8 @@
     "mkdirp": "~0.3.0",
     "ariatemplates" : "~1.2.6",
     "q" : "~0.8.9",
-    "glob" : "~3.1.14"
+    "glob" : "~3.1.14",
+    "send" : "~0.1.0"
   },
   "devDependencies": {
     "nodeunit": "~0.6.4",

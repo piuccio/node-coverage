@@ -8,7 +8,9 @@ Aria.classDefinition({
 			return "/json/all"
 		},
 		
-		parseResponse : function (reports) {
+		parseResponse : function (data) {
+			var reports = data.reports;
+
 			this._data.reports = [];
 			var results = this._data.reports;
 			aria.utils.Array.forEach(reports, function (report) {
@@ -21,6 +23,8 @@ Aria.classDefinition({
 					date : report.date
 				});
 			});
+
+			this._data.conf = data.conf;
 		}
 	}
 });

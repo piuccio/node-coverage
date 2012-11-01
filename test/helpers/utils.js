@@ -6,6 +6,8 @@ var report = require("../../lib/report");
 var path = require("path");
 var fileSystem = require("../../lib/fileSystem");
 var instrument = require("../../lib/instrument");
+var net = require("net");
+var http = require("http");
 
 /**
  * Execute a given callback on a pattern of files. This will read the file,
@@ -41,30 +43,59 @@ exports.run = function (pattern, callback, test, options, then, run) {
 	});
 };
 
+/**
+ * Execute some code inside a new context and get the report
+ * The report is obtained overriding XMLHttpRequest with a simple json serializer
+ *
+ * @param {String} file Name of the file
+ * @param {String} code Code to be executed (already instrumented)
+ * @param {Object} global This corresponds to `window` in the context
+ *
+ * @return {Object} Report as JSON object
+ */
 exports.executeCode = executeCode = function (file, code, globals) {
 	var serialized;
+	var window = globals || {};
 	var sandbox = {
-		XMLHttpRequest : function () {
+		XMLHttpRequest : window.XMLHttpRequest || function () {
 			this.open = function () {};
 			this.setRequestHeader = function () {};
 			this.send = function (data) {
 				serialized = data;
 			};
 		},
-		window : globals || {}
+		window : window
 	};
 	vm.runInNewContext(code, sandbox, file);
 	sandbox.$$_l.submit();
 
-	var json = JSON.parse(serialized);
+	if (serialized) {
+		var json = JSON.parse(serialized);
 
-	return report.generateAll(json);
+		return report.generateAll(json);
+	}
 };
 
+/**
+ * Get the base name of a report
+ *
+ * @param {String} fileName Full path
+ *
+ * @return {String} Basename
+ */
 exports.shortName = function (fileName) {
 	return path.basename(fileName);
 };
 
+/**
+ * Assert that two coverage reports are equal.
+ * This function performs 10 assertions
+ *
+ * @param {Object} measured Report measured by the test
+ * @param {Object} expteced Representation of the expected results
+ * @param {String} file File name, used in logs
+ * @param {Object} testObject Test instance
+ */
 exports.assertCoverageEquals = function (measured, expected, file, testObject) {
 
 	var statementCoverage = measured.statements;
@@ -160,4 +191,96 @@ exports.objectEquals = function (compare, expected) {
 	}
 
 	return true;
+};
+
+/**
+ * Get a random available port
+ *
+ * @param {Number} iterations How many times we should retry before obtaining a port
+ * @param {Function} callback Called when a port is available
+ */
+exports.getPort = function (iterations, callback) {
+	if (iterations <= 0) {
+		callback("Unable to find an open port");
+	} else {
+		var randomPort = Math.floor(Math.random() * 2000 + 8000);
+		
+		net.createServer().listen(randomPort).on("error", function () {
+			// Try a different port
+			getPort(iterations - 1, callback);
+		}).on("listening", function (a, b) {
+			this.close();
+			callback(null, randomPort);
+		});
+	}
+};
+
+/**
+ * Get a file hosted on this server at a given port
+ *
+ * @param {String} name File name
+ * @param {Number} port Port number
+ * @param {Function} callback Called when the file is downloaded
+ */
+exports.getFile = function (name, port, callback) {
+	http.get({
+		port : port,
+		path : name
+	}, function (res) {
+		if (res.statusCode === 200) {
+			var buffer = "";
+
+			res.setEncoding("utf8");
+			res.on("data", function (chunk) {
+			    buffer += chunk;
+			}).on("end", function () {
+				callback(null, buffer);
+			});
+		} else {
+			callback("Response status : " + res.statusCode);
+		}
+	}).on("error", function (error) {
+		callback(error);
+	});
+};
+
+/**
+ * Generate an XMLHttpRequest object able to send a report to the server
+ *
+ * @param {Function} callback Called when the submit is sent
+ */
+exports.xhr = function (port, callback) {
+	return function () {
+		this.open = function () {};
+		this.setRequestHeader = function () {};
+		this.send = function (data) {
+			var req = http.request({
+				port : port,
+				path : "/node-coverage-store",
+				method : "POST",
+				headers : {
+					"Content-Type" : "application/json"
+				}
+			}, function (res) {
+				if (res.statusCode === 200) {
+					var buffer = "";
+
+					res.setEncoding("utf8");
+					res.on("data", function (chunk) {
+					    buffer += chunk;
+					}).on("end", function () {
+						callback(null, buffer);
+					});
+				} else {
+					callback("Response status : " + res.statusCode);
+				}
+			}).on("error", function (error) {
+				callback(error);
+			});
+
+			req.write(data);
+
+			req.end();
+		};
+	}
 };
