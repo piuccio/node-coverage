@@ -75,7 +75,8 @@ if (argv.h) {
 						return path;
 					}
 				}),
-				"verbose" : argv.v
+				"verbose" : argv.v,
+				"storage" : "disk"
 			};
 			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, config);
 			

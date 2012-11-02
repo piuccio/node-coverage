@@ -1,0 +1,15 @@
+{Library {
+	$classpath : "views.lib.CommonLibs"
+}}
+
+{macro sortableHeader(label, callback, view, sorted)}
+<th>
+	<a href="#" {on click callback /}>${label}</a>
+	{if view.sortName === sorted}
+		{var iconName = view.sortOrder === view.SORT_ASCENDING ? "up" : "down" /}
+		<img src="/views/statics/imgs/${iconName}_arrow.png" alt="">
+	{/if}
+</th>
+{/macro}
+
+{/Library}

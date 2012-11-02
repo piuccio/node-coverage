@@ -3,6 +3,9 @@
 	$hasScript : true,
 	$res : {
 		locale : "views.lib.Locale"
+	},
+	$macrolibs : {
+		common : "views.lib.CommonLibs"
 	}
 }}
 
@@ -84,20 +87,14 @@
 {/macro}
 
 {macro sortableHeader(label, what, view)}
-	<th>
-		<a href="#" {on click {
-				fn : "sort",
-				scope : this,
-				args : {
-					what : what,
-					view : view
-				}
-			} /}>${label}</a>
-			{if view.sortName === what}
-				{var iconName = view.sortOrder === view.SORT_ASCENDING ? "down" : "up" /}
-				<img src="/views/statics/imgs/${iconName}_arrow.png" alt="">
-			{/if}
-	</th>
+	{call common.sortableHeader(label, {
+		fn : "sort",
+		scope : this,
+		args : {
+			what : what,
+			view : view
+		}
+	}, view, what) /}
 {/macro}
 
 {macro fileRow(single, view)}

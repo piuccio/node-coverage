@@ -1,5 +1,6 @@
 Aria.tplScriptDefinition({
 	$classpath : "views.report.SummaryScript",
+	$dependencies : ["aria.utils.Number"],
 	$prototype : {
 		formatNumber : function (value, position) {
 			return value.toFixed(position);
@@ -41,7 +42,9 @@ Aria.tplScriptDefinition({
 			}
 			
 			return function (object) {
-				return object.value.report[key].percentage;
+				// format the number and use the file as second key
+				var percentage = object.value.report[key].percentage;
+				return aria.utils.Number.formatNumber(percentage, "000.00") + object.value.file;
 			};
 		},
 
