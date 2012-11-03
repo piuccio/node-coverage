@@ -5,7 +5,7 @@ var rmrf = require("rimraf");
 
 exports.interface = {
 	invalidModules : function (test) {
-		test.expect(7);
+		test.expect(8);
 
 		test.throws(function () {
 			storage();
@@ -56,6 +56,15 @@ exports.interface = {
 			});
 		}, TypeError, "invalid module, not a function");
 
+		test.throws(function () {
+			storage({
+				storage : {
+					read : function () {},
+					save : function () {}
+				}
+			});
+		}, TypeError, "invalid module, missing keys");
+
 		test.done();
 	},
 
@@ -80,6 +89,7 @@ exports.interface = {
 			storage : {
 				read : function () {},
 				save : function () {},
+				keys : function () {},
 				whoCares : 12
 			},
 			whoCares : "not me"
@@ -115,6 +125,14 @@ exports.memory = {
 		});
 
 		override(test, module);
+	},
+
+	keys : function (test) {
+		var module = storage({
+			storage : "memory"
+		});
+
+		list(test, module);
 	}
 };
 
@@ -145,6 +163,14 @@ exports.disk = {
 		});
 
 		override(test, module);
+	},
+
+	keys : function (test) {
+		var module = storage({
+			storage : "disk"
+		});
+
+		list(test, module);
 	},
 
 	folder : function (test) {
@@ -224,6 +250,31 @@ override = function (test, module) {
 				test.equal(text, "another");
 
 				test.done();
+			});
+		});
+	});
+};
+
+list = function (test, module) {
+	test.expect(5);
+
+	var base = __dirname + "/tmp/list/";
+
+	module.save(base + "a", "text", function (err) {
+		module.save(base + "b", "other", function (err) {
+			module.save(base + "c", "last", function (err) {
+				
+				module.keys(base, function (error, keys) {
+					test.ifError(error, "There shouldn't be errors listing keys");
+
+					test.equal(keys.length, 3, "There should be 3 keys");
+					
+					test.ok(keys.indexOf(base + "a") !== -1, "Missing a");
+					test.ok(keys.indexOf(base + "b") !== -1, "Missing b");
+					test.ok(keys.indexOf(base + "c") !== -1, "Missing c");
+
+					test.done();
+				});
 			});
 		});
 	});

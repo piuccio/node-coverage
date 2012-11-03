@@ -21,7 +21,8 @@ exports.memory = function (test) {
 				report.content = JSON.parse(content);
 				callback(null);
 			},
-			read : function () {}
+			read : function () {},
+			keys : function () {}
 		},
 		"function" : true,
 		"condition" : true,

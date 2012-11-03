@@ -201,7 +201,7 @@ exports.objectEquals = function (compare, expected) {
  */
 exports.getPort = function (iterations, callback) {
 	if (iterations <= 0) {
-		callback("Unable to find an open port");
+		callback(new Error("Unable to find an open port"));
 	} else {
 		var randomPort = Math.floor(Math.random() * 2000 + 8000);
 		
@@ -237,7 +237,7 @@ exports.getFile = function (name, port, callback) {
 				callback(null, buffer);
 			});
 		} else {
-			callback("Response status : " + res.statusCode);
+			callback(new Error("Response status : " + res.statusCode));
 		}
 	}).on("error", function (error) {
 		callback(error);
@@ -272,7 +272,7 @@ exports.xhr = function (port, callback) {
 						callback(null, buffer);
 					});
 				} else {
-					callback("Response status : " + res.statusCode);
+					callback(new Error("Response status : " + res.statusCode));
 				}
 			}).on("error", function (error) {
 				callback(error);

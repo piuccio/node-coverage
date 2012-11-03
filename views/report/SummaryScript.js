@@ -37,14 +37,14 @@ Aria.tplScriptDefinition({
 		getSortMethod : function (key) {
 			if (key === "file") {
 				return function (object) {
-					return object.value.file;
+					return object.initIndex;
 				};
 			}
-			
+
 			return function (object) {
 				// format the number and use the file as second key
-				var percentage = object.value.report[key].percentage;
-				return aria.utils.Number.formatNumber(percentage, "000.00") + object.value.file;
+				var percentage = object.value[key].percentage;
+				return aria.utils.Number.formatNumber(percentage, "000.00") + object.initIndex;
 			};
 		},
 

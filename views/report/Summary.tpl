@@ -19,7 +19,7 @@
 
 	{if data.action.name === "all"}
 		{createView view on data.coverage[data.reportName].files /}
-		${initView(view)|empty:""}
+		${initView(view)|eat}
 
 		{section {
 			id : "content",
@@ -80,7 +80,7 @@
 
 		<tbody>
 			{foreach single inView files}
-				{call fileRow(single, files) /}
+				{call fileRow(single_info.initIndex, single, files) /}
 			{/foreach}
 		</tbody>
 	</table>
@@ -97,25 +97,25 @@
 	}, view, what) /}
 {/macro}
 
-{macro fileRow(single, view)}
+{macro fileRow(file, report, view)}
 	{var percentage = 0 /}
 	<tr>
 		<td>
-			{var href = moduleCtrl.getFileUrl(single.file) /}
-			<a href="${href}" data-href="${href}" {on click "getFile" /}>${single.file}</a>
+			{var href = moduleCtrl.getFileUrl(file) /}
+			<a href="${href}" data-href="${href}" {on click "getFile" /}>${file}</a>
 		</td>
 
-		{set percentage = single.report.statements.percentage /}
+		{set percentage = report.statements.percentage /}
 		<td class="${getClass(percentage)}">
 			${formatNumber(percentage, 2)}
 		</td>
 
-		{set percentage = single.report.conditions.percentage /}
+		{set percentage = report.conditions.percentage /}
 		<td class="${getClass(percentage)}">
 			${formatNumber(percentage, 2)}
 		</td>
 
-		{set percentage = single.report.functions.percentage /}
+		{set percentage = report.functions.percentage /}
 		<td class="${getClass(percentage)}">
 			${formatNumber(percentage, 2)}
 		</td>

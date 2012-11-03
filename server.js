@@ -84,7 +84,7 @@ if (argv.h) {
 		}
 
 		/* Admin server */
-		require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
+		require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a, config);
 		console.log("Starting administration interface on port", argv.a);
 		
 		if (argv.v) {
