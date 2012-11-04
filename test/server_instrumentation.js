@@ -7,10 +7,11 @@ var path = require("path");
 var utils = require("./helpers/utils");
 var http = require("http");
 var storage = require("../lib/storage");
+var fs = require("fs");
 
 exports.memory = function (test) {
 	// All the stuff here is just to send a request
-	test.expect(24);
+	test.expect(4 + 2 * 10);
 
 	var report = {};
 
@@ -28,47 +29,36 @@ exports.memory = function (test) {
 		"condition" : true,
 		"doHighlight" : true
 	};
+	var serverOptions = {
+		docRoot : __dirname,
+		adminRoot : path.join(__dirname, "tmp"),
+		coverageOptions : options
+	};
 
-	utils.getPort(maxAttempts, function (error, port) {
+	var fileName = "/server/random.js";
+
+	utils.startServer(server, serverOptions, function (error, port, useless, instance) {
 		test.ifError(error);
 
-		var reportPath = path.join(__dirname, "tmp");
+		utils.getFile(fileName, port, function (errInGet, file) {
+			test.ifError(errInGet);
 
-		var instance = server.start(__dirname, port, reportPath, port + 1, options);
-		instance.on("listening", function () {
-			var fileName = "/server/random.js";
+			utils.executeCode(fileName, file, {
+				XMLHttpRequest : utils.xhr(port, function (errInXhr) {
+					test.ifError(errInXhr);
 
-			utils.getFile(fileName, port, function (errInGet, file) {
-				test.ifError(errInGet);
+					test.ok(/^report_[0-9]+\.json$/.exec(path.basename(report.name)), "Invalid report name");
 
-				utils.executeCode(fileName, file, {
-					XMLHttpRequest : utils.xhr(port, function (errInXhr) {
-						test.ifError(errInXhr);
+					var check = report.content;
+					
+					utils.assertCoverageEquals(check.files[fileName], expected, fileName, test);
+					utils.assertCoverageEquals(check.global, expected, fileName, test);
 
-						test.ok(/^report_[0-9]+\.json$/.exec(path.basename(report.name)), "Invalid report name");
-
-						var check = report.content;
-						
-						utils.assertCoverageEquals(check.files[fileName], expected, fileName, test);
-						utils.assertCoverageEquals(check.global, expected, fileName, test);
-
-						instance.close();
-						if (killMe) {
-							clearTimeout(killMe);
-						}
-						test.done();
-						instance = null;
-					})
-				});
+					instance.close();
+					test.done();
+				})
 			});
 		});
-
-		// Just in case something wrong happens and the server doesn't close by itself
-		var killMe = setTimeout(function () {
-			if (instance) {
-				instance.close();
-			}
-		}, 1000);
 	});
 };
 

@@ -4,8 +4,6 @@ var utils = require("./helpers/utils");
 var http = require("http");
 var storage = require("../lib/storage");
 
-var app = null;
-var killer = null;
 var port = 0;
 var reportPath = path.join(__dirname, "administration");
 var options = {
@@ -25,8 +23,7 @@ exports.access = {
 	},
 
 	listReports : function (test) {
-		test.expect(3);
-		test.ok(!!app, "Missing server");
+		test.expect(2);
 
 		utils.getFile("/", port, function (error, content) {
 			test.ifError(error);
@@ -38,8 +35,7 @@ exports.access = {
 	},
 
 	reportsDetails : function (test) {
-		test.expect(3);
-		test.ok(!!app, "Missing server");
+		test.expect(2);
 
 		utils.getFile("/report", port, function (error, content) {
 			test.ifError(error);
@@ -61,8 +57,7 @@ exports.json = {
 	},
 
 	listReports : function (test) {
-		test.expect(9);
-		test.ok(!!app, "Missing server");
+		test.expect(8);
 
 		utils.getFile("/json/all", port, function (error, content) {
 			test.ifError(error);
@@ -118,8 +113,7 @@ exports.json = {
 	},
 
 	reportsDetails : function (test) {
-		test.expect(6);
-		test.ok(!!app, "Missing server");
+		test.expect(5);
 
 		utils.getFile("/json/report/report_1234567890.json", port, function (error, content) {
 			test.ifError(error);
@@ -143,8 +137,7 @@ exports.json = {
 	},
 
 	missingAction : function (test) {
-		test.expect(2);
-		test.ok(!!app, "Missing server");
+		test.expect(1);
 
 		utils.getFile("/json/whatever", port, function (error, content) {
 			test.ok(!!error, "There should be an error performing wathever action");
@@ -234,37 +227,25 @@ exports.statics = {
 	}
 };
 
-
+var serverInstance;
 function startServer (callback) {
-	utils.getPort(5, function (error, randomPort) {
-		if (error) {
-			app = null;
-			callback();
-		} else {
-			port = randomPort;
+	var serverOptions = {
+		docRoot : __dirname,
+		adminRoot : reportPath,
+		coverageOptions : options
+	};
 
-			var instance = server.start(__dirname, port + 1, reportPath, port, options);
-			instance.on("listening", function () {
-				app = instance;
-				callback();
-			});
-
-			killer = setTimeout(function () {
-				if (instance) {
-					instance.close();
-					app = null
-				}
-			}, 1000);
-		}
+	utils.startServer(server, serverOptions, function (error, _, chosenPort, instance) {
+		serverInstance = instance;
+		port = chosenPort;
+		callback();
 	});
 }
 
 function endServer (callback) {
-	if (app) {
-		clearTimeout(killer);
-		killer = null;
-		app.close();
-		app = null;
+	if (serverInstance) {
+		serverInstance.close();
+		serverInstance = null;
 	}
 	callback();
 }

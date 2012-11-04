@@ -180,11 +180,7 @@ tr:nth-child(odd) td, tr:nth-child(odd) th {
 	background-color: #F1F1F1;
 	border: 0;
 	font-family: 'Inconsolata', sans-serif;
-	white-space: pre-wrap;
-	white-space: -moz-pre-wrap !important;
-	white-space: -pre-wrap;
-	white-space: -o-pre-wrap;
-	word-wrap: break-word;
+	padding : 0;
 }
 tr.not-covered td {
 	background-color: #CFB7B9;
@@ -220,4 +216,25 @@ dd {
 }
 .chart {
 	margin-bottom : 30px;
+}
+xmp {
+	margin : 0;
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap !important;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+	display : inline;
+	line-height : 30px;
+}
+.node {
+	display: inline;
+	padding: 6px 0 8px 0;
+	line-height: 30px;
+}
+.not.statement {
+	background-color: #CFB7B9;
+}
+.not.condition {
+	background-color: #F8EDD1;
 }

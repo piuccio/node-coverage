@@ -48,20 +48,27 @@ Aria.tplScriptDefinition({
 			};
 		},
 
-		isCovered : function (loc) {
-			if (loc.l) {
-				return this.data.report.statements.detail[loc.l] > 0;
-			} else {
-				return true;
-			}
+		isCovered : function (id) {
+			return this.data.report.statements.detail[id] > 0;
+		},
+
+		isChecked : function (id) {
+			var details = this.data.report.conditions.detail.all;
+			console.log(details[id]);
+			return details[id]["true"] > 0 && details[id]["false"] > 0;
 		},
 
 		getLineCount : function (loc) {
-			if (loc.l) {
-				return this.data.report.statements.detail[loc.l];
+			if (loc.sid.length === 0) {
+				// There are no statements
+				return "";
+			} else if (loc.sid.length === 1) {
+				// Just one statement, it's fine
+				return this.data.report.statements.detail[loc.sid[0].id];
+			} else {
+				// Multiple statements, the files is minified
+				return "+";
 			}
-
-			return "";
 		},
 
 		getMissingCondition : function (loc) {
@@ -107,6 +114,36 @@ Aria.tplScriptDefinition({
 			var href = evt.target.getData("href");
 
 			this.moduleCtrl.navigate(href);
+		},
+
+		isNodeBegin : function (node) {
+			return node.type.charAt(1) === "b";
+		},
+
+		getNodeClass : function (node) {
+			var classes = ["node"];
+
+			switch (node.type.charAt(0)) {
+				case "s":
+					classes.push("statement");
+					if (!this.isCovered(node.id)) {
+						classes.push("not");
+					}
+					break;
+				case "f":
+					classes.push("function");
+					break;
+				case "c":
+					classes.push("condition");
+					if (!this.isChecked(node.id)) {
+						classes.push("not");
+					}
+					break;
+				default:
+					return "";
+			}
+
+			return classes.join(" ");
 		}
 	}
 });

@@ -11,7 +11,7 @@ Aria.classDefinition({
 
 			this._data.action = {
 				name : request[1] || "all",
-				args : request[2] || ""
+				args : this.decodeReportName(request[2])
 			};
 
 			return "/json/report/" + request[0];
@@ -37,16 +37,9 @@ Aria.classDefinition({
 
 				this._data.location = coverage.name;
 			} else if (this._data.action.name === "file") {
-				var name = this.decodeReportName(this._data.action.args);
+				var name = this._data.action.args;
 				this._data.location = name;
-
-				var files = coverage.files;
-				for (var i = 0, len = files.length; i < len; i += 1) {
-					if (files[i].file === name) {
-						this._data.report = files[i].report;
-						break;
-					}
-				}
+				this._data.report = coverage.files[name];
 			}
 
 			this.$callback(callback);
@@ -61,7 +54,11 @@ Aria.classDefinition({
 		},
 
 		decodeReportName : function (name) {
-			return name.replace(/%2F/g, "/");
+			if (name) {
+				return name.replace(/%2F/g, "/");
+			} else {
+				return "";
+			}
 		}
 	}
 });

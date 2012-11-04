@@ -164,7 +164,7 @@ exports.assertDetailsEquals = function (measured, expected, file, testObject) {
 exports.clusterFunctions = function (functions) {
 	var map = {};
 	functions.forEach(function (item) {
-		var match = /(\D+)\d+_\d+$/.exec(item);
+		var match = /(\D+)_\d+_\d+_\d+$/.exec(item);
 		var name = match[1];
 
 		if (!map[name]) {
@@ -284,3 +284,61 @@ exports.xhr = function (port, callback) {
 		};
 	}
 };
+
+/**
+ * Start a server instance on two random ports
+ *
+ * @param {Object} Server's module instance
+ * @param {Object} options
+ *    docRoot {String} Document root
+ *    adminRoot {String} Administration root
+ *    coverageOptions {Object} Optional coverage configuration
+ *    timeout {Integer} Timeout in ms, default 1000
+ * @param {Function} callback With the signature
+ *    function (error, port, adminPort, instance)
+ *       [error] Error if any, or null
+ *       [port] Port for the document root
+ *       [adminPort] Port for the administrative root
+ *       [instance] Server instance
+ */
+exports.startServer = function (module, options, callback) {
+	exports.getPort(5, function (error, portOne) {
+		if (error) {
+			callback(error);
+		} else {
+			exports.getPort(5, function (error, portTwo) {
+				if (error) {
+					callback(error);
+				} else {
+					doStart(
+						module,
+						options.docRoot,
+						portOne,
+						options.adminRoot,
+						portTwo,
+						options.coverageOptions,
+						options.timeout || 1000,
+						callback
+					);
+				}
+			});
+		}
+	});
+}
+
+doStart = function (server, docRoot, port, adminRoot, adminPort, coverageOptions, timeout, callback) {
+	var instance = server.start(docRoot, port, adminRoot, adminPort, coverageOptions);
+	instance.on("listening", function () {
+		callback(null, port, adminPort, instance);
+	});
+	instance.on("close", function () {
+		clearTimeout(killer);
+		killer = null;
+	});
+
+	var killer = setTimeout(function () {
+		if (killer) {
+			instance.close();
+		}
+	}, timeout);
+}

@@ -154,19 +154,31 @@
 		</thead>
 
 		<tbody>
-			{foreach loc in data.report.code.src}
-				{var missing = getMissingCondition(loc) /}
-
-				<tr class="${missing["class"]}">
+			{foreach loc in data.report.code}
+				<tr class="VARIABLE">
 					<td>${loc_index}</td>
-					<td>${getLineCount(loc)}</td>
-					<td>${missing["true"]}</td>
-					<td>${missing["false"]}</td>
-					<td class="code">${loc.s}</td>
+					<td>VARIABLE</td>
+					<td>VARIABLE</td>
+					<td>VARIABLE</td>
+					<td class="code">{call formatCode(loc) /}</td>
 				</tr>
 			{/foreach}
 		</tbody>
 	</table>
+{/macro}
+
+{macro formatCode (loc)}
+	{foreach node in loc}
+		{if aria.utils.Type.isString(node)}
+			<xmp>${node}</xmp>
+		{else /}
+			{if isNodeBegin(node)}
+				<span class="${getNodeClass(node)}">
+			{else /}
+				</span>
+			{/if}
+		{/if}
+	{/foreach}
 {/macro}
 
 
