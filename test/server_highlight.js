@@ -62,16 +62,17 @@ exports.display = function (test) {
 };
 
 checkCode = function (test, code) {
+	var originalCode = code.original;
 	expected.forEach(function (line, number) {
-		test.equal(line.node.length, code[number].length, "Nodes length differs on line " + number);
+		test.equal(line.node.length, originalCode[number].length, "Nodes length differs on line " + number);
 
 		line.node.forEach(function (type, position) {
 			var msg = "Node in line " + number + " position " + position;
 
 			if (type === "t") {
-				test.ok(typeof code[number][position] === "string", msg);
+				test.ok(typeof originalCode[number][position] === "string", msg);
 			} else {
-				test.equal(type, code[number][position].type, msg);
+				test.equal(type, originalCode[number][position].type, msg);
 			}
 		});
 	});

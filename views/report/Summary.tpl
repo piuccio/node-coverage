@@ -9,6 +9,10 @@
 	}
 }}
 
+{var meta = {
+	original : false
+}/}
+
 {macro main()}
 	{call summary(locale.STATEMENT_COVERAGE, data.report.statements.percentage)/}
 	{call summary(locale.CONDITION_COVERAGE, data.report.conditions.percentage)/}
@@ -123,7 +127,7 @@
 {/macro}
 
 {macro legend(action)}
-	{if action === "file"}
+	{if action === "file" && !meta.original}
 		<div class="legend">
 			<dl>
 				<dt>${locale.LINE}</dt>
@@ -143,28 +147,109 @@
 {/macro}
 
 {macro file()}
-	<table class="small">
-		<thead>
-			<tr>
-				<th>${locale.LINE}</th>
-				<th>${locale.COUNT}</th>
-				<th>${locale.TRUE}</th>
-				<th>${locale.FALSE}</th>
-			</tr>
-		</thead>
+	{section {
+		id : "reportFile",
+		macro : "sourceCode",
+		type : "table",
+		attributes : {
+			classList : ["small"]
+		},
+		bindRefreshTo : [{
+			inside : meta,
+			to : "original"
+		}]
+	}/}
+{/macro}
 
-		<tbody>
-			{foreach loc in data.report.code}
-				<tr class="VARIABLE">
-					<td>${loc_index}</td>
-					<td>VARIABLE</td>
-					<td>VARIABLE</td>
-					<td>VARIABLE</td>
-					<td class="code">{call formatCode(loc) /}</td>
-				</tr>
-			{/foreach}
-		</tbody>
-	</table>
+{macro sourceCode()}
+	{if meta.original}
+		{call original()/}
+	{else /}
+		{call beauty()/}
+	{/if}
+{/macro}
+
+{macro beauty()}
+	<thead>
+		<tr>
+			<th>${locale.LINE}</th>
+			<th>${locale.COUNT}</th>
+			<th>${locale.TRUE}</th>
+			<th>${locale.FALSE}</th>
+			<th><a href="#" {on click {
+				fn : function (evt) {
+					evt.preventDefault(true);
+					this.$json.setValue(this.meta, "original", !this.meta.original);
+				},
+				scope : this
+			} /}>
+				${locale.VIEW_ORIGINAL}
+			</a></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{var newLine = true /}
+		{foreach loc in data.report.code.beauty.src}
+			{var missing = getMissingCondition(loc) /}
+
+			<tr class="${missing["class"]}">
+				<td>${loc_index}</td>
+				<td>${getLineCount(loc)}</td>
+				<td>${missing["true"]}</td>
+				<td>${missing["false"]}</td>
+				<td class="code"><xmp>${loc.s}</xmp></td>
+			</tr>
+		{/foreach}
+	</tbody>
+{/macro}
+
+{macro original()}
+	<thead>
+		<tr>
+			<th><a href="#" {on click {
+				fn : function (evt) {
+					evt.preventDefault(true);
+					this.$json.setValue(this.meta, "original", !this.meta.original);
+				},
+				scope : this
+			} /}>
+				${locale.VIEW_BEAUTY}
+			</a></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		// In case an open span end on a new line
+		{var fallThroughNewLine = false /}
+		{foreach loc in data.report.code.original}
+			<tr>
+				<td class="code">
+					{if fallThroughNewLine}
+						<span class="${fallThroughNewLine}">
+					{/if}
+
+					{foreach node in loc}
+						{if aria.utils.Type.isString(node)}
+							<xmp>${node}</xmp>
+						{else /}
+							{if isNodeBegin(node)}
+								{var fallThroughNewLine = getNodeClass(node) /}
+								<span class="${fallThroughNewLine}">
+							{else /}
+								{if node.type === "ce" && getPartialCondition(node)}
+									<span class="partial">${getPartialCondition(node)}</span>
+								{/if}
+
+								{set fallThroughNewLine = false /}
+								</span>
+							{/if}
+						{/if}
+					{/foreach}
+				</td>
+			</tr>
+		{/foreach}
+	</tbody>
 {/macro}
 
 {macro formatCode (loc)}
@@ -173,8 +258,14 @@
 			<xmp>${node}</xmp>
 		{else /}
 			{if isNodeBegin(node)}
-				<span class="${getNodeClass(node)}">
+				{var fallThroughNewLine = getNodeClass(node) /}
+				<span class="${fallThroughNewLine}">
 			{else /}
+				{if node.type === "ce" && getPartialCondition(node)}
+					<span class="partial">${getPartialCondition(node)}</span>
+				{/if}
+
+				{set fallThroughNewLine = false /}
 				</span>
 			{/if}
 		{/if}

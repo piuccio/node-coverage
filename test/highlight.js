@@ -12,7 +12,7 @@ exports.splitLines = function (test) {
 	fs.readFile(fileName, "utf-8", function (error, content) {
 		var structure = js.interpret(fileName, content);
 
-		var result = highlight(content, structure);
+		var result = highlight(content, structure).original;
 
 		var reconstructed = "";
 		expected.forEach(function (line, number) {
@@ -74,6 +74,12 @@ exports.simple = {
 		var content = "\r\nvar a;\r\n\r\nvar b;\r\n";
 		var expected = ["", "var a;", "", "var b;"];
 		simpleTest(test, content, expected, 4);
+	},
+
+	textLastLine : function (test) {
+		var content = "var a;\n   ";
+		var expected = ["var a;", "   "];
+		simpleTest(test, content, expected, 2);
 	}
 }
 
@@ -109,11 +115,19 @@ exports.conditions = {
 	}
 }
 
+exports.multinode = {
+	statements : function (test) {
+		var content = "var a=1;var b=2;\nvar c=3;var d=4";
+		var expected = ["var a=1;", "var b=2;", "var c=3;", "var d=4"];
+		simpleTest(test, content, expected, 2);
+	}
+}
+
 function simpleTest(test, content, expected, lines) {
 	test.expect(2);
 
 	var structure = js.interpret("test", content);
-	var result = highlight(content, structure);
+	var result = highlight(content, structure).original;
 
 	test.equal(result.length, lines, "Lines don't match");
 
@@ -138,7 +152,7 @@ function extractConditions(test, content, expected) {
 	test.expect(1);
 
 	var structure = js.interpret("test", content);
-	var result = highlight(content, structure);
+	var result = highlight(content, structure).original;
 
 	var tokens = [];
 	var condition = "";

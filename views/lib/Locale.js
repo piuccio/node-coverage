@@ -19,6 +19,8 @@ Aria.resourcesDefinition({
 		"TRUE_DEFINITION" : "conditions that were never evaluated <code>true</code>",
 		"FALSE" : "false",
 		"FALSE_DEFINITION" : "conditions that were never evaluated <code>false</code>",
+		"VIEW_BEAUTY" : "Display beautified code",
+		"VIEW_ORIGINAL" : "Display original code",
 
 		"REPORTS_FROM" : "Reports from"
 	}

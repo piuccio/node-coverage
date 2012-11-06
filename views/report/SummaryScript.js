@@ -48,27 +48,31 @@ Aria.tplScriptDefinition({
 			};
 		},
 
+		getFile : function (evt) {
+			evt.preventDefault(true);
+
+			var href = evt.target.getData("href");
+
+			this.moduleCtrl.navigate(href);
+		},
+
 		isCovered : function (id) {
 			return this.data.report.statements.detail[id] > 0;
 		},
 
 		isChecked : function (id) {
 			var details = this.data.report.conditions.detail.all;
-			console.log(details[id]);
 			return details[id]["true"] > 0 && details[id]["false"] > 0;
 		},
 
+		/* Methods for the beauty code */
+
 		getLineCount : function (loc) {
-			if (loc.sid.length === 0) {
-				// There are no statements
-				return "";
-			} else if (loc.sid.length === 1) {
-				// Just one statement, it's fine
-				return this.data.report.statements.detail[loc.sid[0].id];
-			} else {
-				// Multiple statements, the files is minified
-				return "+";
+			if (loc.l) {
+				return this.data.report.statements.detail[loc.l];
 			}
+
+			return "";
 		},
 
 		getMissingCondition : function (loc) {
@@ -76,7 +80,7 @@ Aria.tplScriptDefinition({
 				"true" : [],
 				"false" : [],
 				partially : false,
-				covered : this.isCovered(loc)
+				covered : this.isCovered(loc.l)
 			};
 
 			var array = aria.utils.Array;
@@ -108,13 +112,7 @@ Aria.tplScriptDefinition({
 			};
 		},
 
-		getFile : function (evt) {
-			evt.preventDefault(true);
-
-			var href = evt.target.getData("href");
-
-			this.moduleCtrl.navigate(href);
-		},
+		/* Methods for the original code */
 
 		isNodeBegin : function (node) {
 			return node.type.charAt(1) === "b";
@@ -144,6 +142,22 @@ Aria.tplScriptDefinition({
 			}
 
 			return classes.join(" ");
+		},
+
+		getPartialCondition : function (node) {
+			var details = this.data.report.conditions.detail.all;
+
+			var isEverTrue = details[node.id]["true"] > 0;
+			var isEverFalse = details[node.id]["false"] > 0;
+			if (isEverTrue && isEverFalse) {
+				return "";
+			} else if (!isEverTrue && !isEverFalse) {
+				return "";
+			} else if (isEverTrue) {
+				return "true";
+			} else {
+				return "false";
+			}
 		}
 	}
 });

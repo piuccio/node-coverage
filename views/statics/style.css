@@ -199,6 +199,10 @@ tr.partially-covered td {
 }
 .small th:last-child {
 	border-right: 1px solid #CCC;
+	text-align: center;
+}
+.small th:only-child {
+	text-align: left;
 }
 .legend {
 	font-size: 75%;
@@ -231,10 +235,22 @@ xmp {
 	display: inline;
 	padding: 6px 0 8px 0;
 	line-height: 30px;
+	position: relative;
 }
 .not.statement {
 	background-color: #CFB7B9;
 }
 .not.condition {
 	background-color: #F8EDD1;
+}
+.not.statement .not.condition {
+	background-color: transparent;
+}
+.condition .partial {
+	position: absolute;
+	vertical-align: top;
+	top: -12px;
+	font-size: small;
+	right: 2px;
+	font-family: monospace;
 }
