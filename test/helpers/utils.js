@@ -119,6 +119,15 @@ exports.assertCoverageEquals = function (measured, expected, file, testObject) {
 		expected.functionsPercentage.toFixed(5), "percentage functions " + file);
 };
 
+/**
+ * Assert that the details of a report are as expected.
+ * This function performs 9 assertions
+ *
+ * @param {Object} measured Report measured by the test
+ * @param {Object} expteced Representation of the expected results
+ * @param {String} file File name, used in logs
+ * @param {Object} testObject Test instance
+ */
 exports.assertDetailsEquals = function (measured, expected, file, testObject) {
 	var statementsDetails = measured.statements.detail;
 

@@ -133,6 +133,14 @@ exports.memory = {
 		});
 
 		list(test, module);
+	},
+
+	readMany : function (test) {
+		var module = storage({
+			storage : "memory"
+		});
+
+		many(test, module);
 	}
 };
 
@@ -193,6 +201,14 @@ exports.disk = {
 				});
 			});
 		});
+	},
+
+	readMany : function (test) {
+		var module = storage({
+			storage : "disk"
+		});
+
+		many(test, module);
 	}
 };
 
@@ -279,3 +295,33 @@ list = function (test, module) {
 		});
 	});
 };
+
+function many (test, module) {
+	test.expect(6);
+
+	var base = __dirname + "/tmp/list/";
+
+	module.save(base + "a", "A", function (err) {
+		module.save(base + "b", "B", function (err) {
+			module.save(base + "c", "C", function (err) {
+
+				module.read([base + "c", base + "a"], function (error, objects) {
+					test.ifError(error, "Error while reading many reports");
+
+					test.equal(Object.keys(objects).length, 2, "There should be 2 objects");
+
+					test.equals(objects[base + "a"], "A", "Missing a");
+					test.equals(objects[base + "c"], "C", "Missing c");
+
+					module.read([base + "b", base + "f"], function (error, objects) {
+						test.ok(!!error, "I should get an error reading missing reports");
+
+						test.notEqual(error.message.indexOf(base + "f"), -1, "Error should mention base+f");
+
+						test.done();
+					});
+				});
+			});
+		});
+	});
+}
