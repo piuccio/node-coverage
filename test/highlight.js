@@ -112,6 +112,18 @@ exports.conditions = {
 		var content = "if( void 0 &&  delete a.b){}";
 		var expected = ["void 0", "delete a.b"];
 		extractConditions(test, content, expected);
+	},
+
+	binaryAssignment : function (test) {
+		var content = "b = a.returnValue === 1 ? K : J";
+		var expected = ["a.returnValue === 1"];
+		extractConditions(test, content, expected);
+	},
+
+	unaryAssignment : function (test) {
+		var content = "b = !a.returnValue === 1 ? K : J";
+		var expected = ["!a.returnValue === 1"];
+		extractConditions(test, content, expected);
 	}
 }
 
