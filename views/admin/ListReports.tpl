@@ -31,7 +31,7 @@
 			<th class="merge">
 				<input type="submit" value="Merge">
 			</th>
-			{call common.sortableHeader("Report", {
+			{call common.sortableHeader(locale.REPORT, {
 				fn : "sort",
 				scope : this,
 				args : {
@@ -39,7 +39,7 @@
 					view : reports
 				}
 			}, reports, "id") /}
-			{call common.sortableHeader("Date", {
+			{call common.sortableHeader(locale.DATE, {
 				fn : "sort",
 				scope : this,
 				args : {
@@ -47,7 +47,7 @@
 					view : reports
 				}
 			}, reports, "time") /}
-			<th>Function stack</th>
+			<th>VARIABLE</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -69,7 +69,7 @@
 			<em>${report.date}</em>
 		</td>
 		<td>
-			<a href="VARIABLE">view</a>
+			<a href="VARIABLE">VARIABLE</a>
 		</td>
 	</tr>
 {/macro}

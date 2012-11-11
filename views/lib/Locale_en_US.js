@@ -1,6 +1,9 @@
 Aria.resourcesDefinition({
 	$classpath : "views.lib.Locale",
 	$resources : {
+		"REPORT" : "Report",
+		"DATE" : "Date",
+		
 		"STATEMENT_COVERAGE" : "Statement Coverage:",
 		"CONDITION_COVERAGE" : "Condition coverage:",
 		"FUNCTION_COVERAGE" : "Function coverage:",
@@ -9,6 +12,9 @@ Aria.resourcesDefinition({
 		"STATEMENT" : "Statement",
 		"CONDITION" : "Condition",
 		"FUNCTION" : "Function",
+		"STATEMENT_PLURAL" : "Statements",
+		"CONDITION_PLURAL" : "Conditions",
+		"FUNCTION_PLURAL" : "Functions",
 		"STAT_GRAPH" : "Stats & Graphs",
 
 		"LINE" : "#",
@@ -22,6 +28,9 @@ Aria.resourcesDefinition({
 		"VIEW_BEAUTY" : "Display beautified code",
 		"VIEW_ORIGINAL" : "Display original code",
 
-		"REPORTS_FROM" : "Reports from"
+		"REPORTS_FROM" : "Reports from",
+
+		"STATEMENT_LEGEND" : "have a white background, the number on top/left corner tells how many time the statement was called.",
+		"CONDITION_LEGEND" : "have a yellow background if they are only partially covered. The text 'true' or 'false' in top/right corner means that the condition was only evaluated 'true' or 'false'."
 	}
 });

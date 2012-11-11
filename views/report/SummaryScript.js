@@ -2,6 +2,7 @@ Aria.tplScriptDefinition({
 	$classpath : "views.report.SummaryScript",
 	$dependencies : ["aria.utils.Number"],
 	$prototype : {
+
 		formatNumber : function (value, position) {
 			return value.toFixed(position);
 		},
@@ -57,7 +58,12 @@ Aria.tplScriptDefinition({
 		},
 
 		isCovered : function (id) {
-			return this.data.report.statements.detail[id] > 0;
+			if (id in this.data.report.statements.detail) {
+				return this.data.report.statements.detail[id] > 0;
+			} else {
+				// it's not a line of code
+				return true;
+			}
 		},
 
 		isChecked : function (id) {
@@ -68,8 +74,10 @@ Aria.tplScriptDefinition({
 		/* Methods for the beauty code */
 
 		getLineCount : function (loc) {
-			if (loc.l) {
-				return this.data.report.statements.detail[loc.l];
+			var id = loc.l || loc.id;
+
+			if (id) {
+				return this.data.report.statements.detail[id];
 			}
 
 			return "";

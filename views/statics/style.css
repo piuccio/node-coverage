@@ -208,6 +208,7 @@ tr.partially-covered td {
 	font-size: 75%;
 	float: right;
 	margin: 15px 25px 0 0;
+	max-width: 400px;
 }
 dt {
 	font-weight: bold;
@@ -252,5 +253,16 @@ xmp {
 	top: -12px;
 	font-size: small;
 	right: 2px;
+	font-family: monospace;
+}
+.statement {
+	background-color: #FFF;
+}
+.statement .lineCount {
+	position: absolute;
+	vertical-align: top;
+	top: -10px;
+	font-size: small;
+	left: 2px;
 	font-family: monospace;
 }

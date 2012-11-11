@@ -17,7 +17,21 @@
 	{call summary(locale.STATEMENT_COVERAGE, data.report.statements.percentage)/}
 	{call summary(locale.CONDITION_COVERAGE, data.report.conditions.percentage)/}
 	{call summary(locale.FUNCTION_COVERAGE, data.report.functions.percentage)/}
-	{call legend(data.action.name)/}
+	{section {
+		id : "legend",
+		macro : {
+			name : "legend",
+			args : [data.action]
+		},
+		type : "div",
+		attributes : {
+			classList : ["legend"]
+		},
+		bindRefreshTo : [{
+			inside : meta,
+			to : "original"
+		}]
+	}/}
 	<div class="clear">&nbsp;</div>
 
 
@@ -127,22 +141,28 @@
 {/macro}
 
 {macro legend(action)}
-	{if action === "file" && !meta.original}
-		<div class="legend">
-			<dl>
-				<dt>${locale.LINE}</dt>
-				<dd>${locale.LINE_NUMBER}</dd>
+	{if action.name === "file" && !meta.original}
+		<dl>
+			<dt>${locale.LINE}</dt>
+			<dd>${locale.LINE_NUMBER}</dd>
 
-				<dt>${locale.COUNT}</dt>
-				<dd>${locale.COUNT_DEFINITION}</dd>
+			<dt>${locale.COUNT}</dt>
+			<dd>${locale.COUNT_DEFINITION}</dd>
 
-				<dt>${locale.TRUE}</dt>
-				<dd>${locale.TRUE_DEFINITION}</dd>
+			<dt>${locale.TRUE}</dt>
+			<dd>${locale.TRUE_DEFINITION}</dd>
 
-				<dt>${locale.FALSE}</dt>
-				<dd>${locale.FALSE_DEFINITION}</dd>
-			</dl>
-		</div>
+			<dt>${locale.FALSE}</dt>
+			<dd>${locale.FALSE_DEFINITION}</dd>
+		</dl>
+	{elseif action.name === "file" /}
+		<dl>
+			<dt>${locale.STATEMENT_PLURAL}</dt>
+			<dd>${locale.STATEMENT_LEGEND}</dd>
+
+			<dt>${locale.CONDITION_PLURAL}</dt>
+			<dd>${locale.CONDITION_LEGEND}</dd>
+		</dl>
 	{/if}
 {/macro}
 
@@ -229,47 +249,34 @@
 						<span class="${fallThroughNewLine}">
 					{/if}
 
-					{foreach node in loc}
-						{if aria.utils.Type.isString(node)}
-							<xmp>${node}</xmp>
-						{else /}
-							{if isNodeBegin(node)}
-								{var fallThroughNewLine = getNodeClass(node) /}
-								<span class="${fallThroughNewLine}">
+					{if loc.length > 0}
+						{foreach node in loc}
+							{if aria.utils.Type.isString(node)}
+								<xmp>${node}</xmp>
 							{else /}
-								{if node.type === "ce" && getPartialCondition(node)}
-									<span class="partial">${getPartialCondition(node)}</span>
-								{/if}
+								{if isNodeBegin(node)}
+									{set fallThroughNewLine = getNodeClass(node) /}
+									<span class="${fallThroughNewLine}">
+									{if node.type === "sb"}
+										<span class="lineCount">${getLineCount(node)}</span>
+									{/if}
+								{else /}
+									{if node.type === "ce" && getPartialCondition(node)}
+										<span class="partial">${getPartialCondition(node)}</span>
+									{/if}
 
-								{set fallThroughNewLine = false /}
-								</span>
+									{set fallThroughNewLine = false /}
+									</span>
+								{/if}
 							{/if}
-						{/if}
-					{/foreach}
+						{/foreach}
+					{else /}
+						&nbsp;
+					{/if}
 				</td>
 			</tr>
 		{/foreach}
 	</tbody>
-{/macro}
-
-{macro formatCode (loc)}
-	{foreach node in loc}
-		{if aria.utils.Type.isString(node)}
-			<xmp>${node}</xmp>
-		{else /}
-			{if isNodeBegin(node)}
-				{var fallThroughNewLine = getNodeClass(node) /}
-				<span class="${fallThroughNewLine}">
-			{else /}
-				{if node.type === "ce" && getPartialCondition(node)}
-					<span class="partial">${getPartialCondition(node)}</span>
-				{/if}
-
-				{set fallThroughNewLine = false /}
-				</span>
-			{/if}
-		{/if}
-	{/foreach}
 {/macro}
 
 
