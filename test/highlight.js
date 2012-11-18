@@ -124,6 +124,12 @@ exports.conditions = {
 		var content = "b = !a.returnValue === 1 ? K : J";
 		var expected = ["!a.returnValue === 1"];
 		extractConditions(test, content, expected);
+	},
+
+	doubleCondition : function (test) {
+		var content = "a && b ? (function () {\n})() : (function () {\n})()";
+		var expected = ["a", "b"];
+		extractConditions(test, content, expected);
 	}
 }
 

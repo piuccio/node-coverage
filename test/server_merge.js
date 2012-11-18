@@ -35,7 +35,7 @@ var options = {
 };
 
 exports.merge = function (test) {
-	test.expect(3 + 2 * (10 + 9) + 10);
+	test.expect(4 + 2 * (10 + 9) + 10);
 
 	utils.startServer(instrument, options, function (error, port, _, instanceInstrument) {
 		utils.startServer(server, options, function (error, _, adminPort, instanceAdmin) {
@@ -51,6 +51,8 @@ exports.merge = function (test) {
 						utils.getFile("/json/report/" + data, adminPort, function (error, textReport) {
 							report = JSON.parse(textReport);
 
+							test.equal(data, report.name, "Merged report has no name");
+
 							for (var fileName in report.files) {
 								var shortFileName = utils.shortName(fileName);
 
@@ -60,6 +62,9 @@ exports.merge = function (test) {
 
 							utils.assertCoverageEquals(report.global, expectedCoverage["merge_1_2"], "merge_1_2", test);
 
+
+							instanceInstrument.close();
+							instanceAdmin.close();
 							test.done();
 						});
 					});

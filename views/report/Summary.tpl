@@ -14,14 +14,15 @@
 }/}
 
 {macro main()}
-	{call summary(locale.STATEMENT_COVERAGE, data.report.statements.percentage)/}
-	{call summary(locale.CONDITION_COVERAGE, data.report.conditions.percentage)/}
-	{call summary(locale.FUNCTION_COVERAGE, data.report.functions.percentage)/}
+	{call common.summary(locale.STATEMENT_COVERAGE, data.report.statements.percentage)/}
+	{call common.summary(locale.CONDITION_COVERAGE, data.report.conditions.percentage)/}
+	{call common.summary(locale.FUNCTION_COVERAGE, data.report.functions.percentage)/}
 	{section {
 		id : "legend",
 		macro : {
 			name : "legend",
-			args : [data.action]
+			args : [data.action, meta],
+			scope : common
 		},
 		type : "div",
 		attributes : {
@@ -65,15 +66,6 @@
 		What?
 	{/if}
 	
-{/macro}
-
-{macro summary(label, percentage)}
-	<div class="summary">
-		<h2>
-			${label}
-			<h1>${formatNumber(percentage, 2)}</h1>
-		</h2>
-	</div>
 {/macro}
 
 {macro content(files)}
@@ -140,31 +132,11 @@
 	</tr>
 {/macro}
 
-{macro legend(action)}
-	{if action.name === "file" && !meta.original}
-		<dl>
-			<dt>${locale.LINE}</dt>
-			<dd>${locale.LINE_NUMBER}</dd>
 
-			<dt>${locale.COUNT}</dt>
-			<dd>${locale.COUNT_DEFINITION}</dd>
 
-			<dt>${locale.TRUE}</dt>
-			<dd>${locale.TRUE_DEFINITION}</dd>
-
-			<dt>${locale.FALSE}</dt>
-			<dd>${locale.FALSE_DEFINITION}</dd>
-		</dl>
-	{elseif action.name === "file" /}
-		<dl>
-			<dt>${locale.STATEMENT_PLURAL}</dt>
-			<dd>${locale.STATEMENT_LEGEND}</dd>
-
-			<dt>${locale.CONDITION_PLURAL}</dt>
-			<dd>${locale.CONDITION_LEGEND}</dd>
-		</dl>
-	{/if}
-{/macro}
+/**
+ * Display the content of a single report
+ */
 
 {macro file()}
 	{section {

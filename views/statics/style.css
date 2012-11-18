@@ -92,6 +92,10 @@ em {
 	font-weight : bold;
 	margin-left : 1em;
 }
+.cow {
+	font-family: monospace;
+	line-height: 18px;
+}
 
 .header {
 	height : 40px;

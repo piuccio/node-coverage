@@ -35,7 +35,7 @@
     "express": "3.x",
     "http-proxy": "~0.8.0",
     "mkdirp": "~0.3.0",
-    "ariatemplates" : "~1.2.6",
+    "ariatemplates" : "~1.3.1",
     "q" : "~0.8.9",
     "glob" : "~3.1.14",
     "send" : "~0.1.0"

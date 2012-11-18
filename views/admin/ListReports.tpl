@@ -9,28 +9,62 @@
 	},
 	$dependencies : ["aria.utils.String"]
 }}
-{createView reports on data.reports /}
-{macro main()}
-<form class="content" action="merge" method="GET">
-	<h4>${locale.REPORTS_FROM}<em>${data.conf.reportFolder}</em></h4>
 
-	{section {
-		id : "table",
-		type : "table",
-		macro : "table",
-		attributes : {
-			classList : ["reports"]
-		}
-	}/}
-</form>
+{createView reports on data.reports /}
+{var meta = {
+	selection : []
+}/}
+
+{macro main()}
+{section {
+	id : "main",
+	macro : "form",
+	bindRefreshTo : [{
+		inside : data,
+		to : "error"
+	}]
+}/}
+{/macro}
+
+{macro form()}
+{if data.error}
+<pre class="cow">
+${getErrorMessage(data.error)}
+{CDATA}
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+{/CDATA}
+</pre>
+<a href="/" {on click {
+	fn : function (evt) {
+		evt.preventDefault(true);
+		this.$json.setValue(this.data, "error", false);
+	},
+	scope : this
+}/}>back</a>
+{else /}
+	<form class="content" action="merge" method="POST">
+		<h4>${locale.REPORTS_FROM}<em>${data.conf.reportFolder}</em></h4>
+
+		{section {
+			id : "table",
+			type : "table",
+			macro : "table",
+			attributes : {
+				classList : ["reports"]
+			}
+		}/}
+	</form>
+{/if}
 {/macro}
 
 {macro table()}
 	<thead>
 		<tr>
-			<th class="merge">
-				<input type="submit" value="Merge">
-			</th>
+			{call actionButton()/}
 			{call common.sortableHeader(locale.REPORT, {
 				fn : "sort",
 				scope : this,
@@ -60,7 +94,11 @@
 {macro reportLine(report)}
 	<tr>
 		<td>
-			<input type="checkbox" name="report" value="${report.id}">
+			<input type="checkbox" name="report" {on click {
+				fn : "selectReport",
+				scope : this,
+				args : report
+			}/}>
 		</td>
 		<td>
 			<a href="/report/${report.id}" data-href="/report/${report.id}" {on click "getReport" /}>${report.name}</a>
@@ -72,5 +110,32 @@
 			<a href="VARIABLE">VARIABLE</a>
 		</td>
 	</tr>
+{/macro}
+
+{macro actionButton()}
+	{section {
+		id : "button",
+		macro : "button",
+		type : "th",
+		attributes : {
+			classList : ["merge"]
+		},
+		bindRefreshTo : [{
+			inside : meta,
+			to : "selection"
+		}]
+	}/}
+{/macro}
+
+{macro button()}
+	{if meta.selection.length === 1}
+		// TODO admin action : rename, delete
+	{elseif meta.selection.length > 1 /}
+		<button {on click {
+			fn : "merge",
+			scope : this,
+			args : meta.selection
+		}/}>Merge</button>
+	{/if}
 {/macro}
 {/Template}

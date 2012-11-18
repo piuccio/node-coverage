@@ -3,7 +3,7 @@ Aria.resourcesDefinition({
 	$resources : {
 		"REPORT" : "Report",
 		"DATE" : "Date",
-		
+
 		"STATEMENT_COVERAGE" : "Statement Coverage:",
 		"CONDITION_COVERAGE" : "Condition coverage:",
 		"FUNCTION_COVERAGE" : "Function coverage:",
@@ -31,6 +31,9 @@ Aria.resourcesDefinition({
 		"REPORTS_FROM" : "Reports from",
 
 		"STATEMENT_LEGEND" : "have a white background, the number on top/left corner tells how many time the statement was called.",
-		"CONDITION_LEGEND" : "have a yellow background if they are only partially covered. The text 'true' or 'false' in top/right corner means that the condition was only evaluated 'true' or 'false'."
+		"CONDITION_LEGEND" : "have a yellow background if they are only partially covered. The text 'true' or 'false' in top/right corner means that the condition was only evaluated 'true' or 'false'.",
+
+		"MERGE_ERROR" : "Error while merging reports:\n %1\n %2",
+		"GENERIC_ERROR" : "I dunno what happened!"
 	}
 });
