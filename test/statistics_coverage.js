@@ -44,7 +44,7 @@ var byPackage = {
 	}
 };
 
-exports.unused = function (test) {
+exports.coverage = function (test) {
 	test.expect(6);
 
 	var allReports = [];
@@ -59,11 +59,11 @@ exports.unused = function (test) {
 	}).then(function () {
 		var merged = report.mergeReports(allReports);
 
-		var statistics = report.stats(merged);
+		report.stats(merged, function (statistics) {
+			assertCoverageStatistics(test, statistics.coverage.statements);
 
-		assertCoverageStatistics(test, statistics.coverage.statements);
-
-		test.done();
+			test.done();
+		});
 	}, function (error) {
 		test.ifError(error);
 		test.ok(false, "Perform action failed");

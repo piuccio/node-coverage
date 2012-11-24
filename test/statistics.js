@@ -71,17 +71,19 @@ exports.unused = function (test) {
 	}).then(function () {
 		var merged = report.mergeReports(allReports);
 
-		var statistics = report.stats(merged).unused;
+		report.stats(merged, function (statistics) {
+			var stats = statistics.unused;
 
-		test.equal(statistics.total, unusedLines, "Total unused lines");
-		test.ok(helpers.objectEquals(statistics.byFile, byFile), "Group by file");
+			test.equal(stats.total, unusedLines, "Total unused lines");
+			test.ok(helpers.objectEquals(stats.byFile, byFile), "Group by file");
 
-		for (var length in statistics.byPackage) {
-			test.ok(helpers.objectEquals(
-				statistics.byPackage[length], byPackage[length]), "Group by package, depth " + length);
-		}
+			for (var length in stats.byPackage) {
+				test.ok(helpers.objectEquals(
+					stats.byPackage[length], byPackage[length]), "Group by package, depth " + length);
+			}
 
-		test.done();
+			test.done();
+		});
 	}, function (error) {
 		test.ifError(error);
 		test.ok(false, "Perform action failed");
