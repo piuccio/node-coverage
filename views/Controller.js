@@ -20,6 +20,13 @@ Aria.classDefinition({
 					classpath : "views.report.SummaryController"
 				},
 				block : true
+			},
+			"stats" : {
+				defaultTemplate : "views.stats.Statistics",
+				moduleCtrl : {
+					classpath : "views.stats.Controller"
+				},
+				block : true
 			}
 		},
 

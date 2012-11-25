@@ -72,6 +72,18 @@ Aria.classDefinition({
 
 		sameAction : function (callback) {
 			this.$callback(callback);
+		},
+
+		encodeReportName : function (name) {
+			return name.replace(/\//g, "%2F");
+		},
+
+		decodeReportName : function (name) {
+			if (name) {
+				return name.replace(/%2F/g, "/");
+			} else {
+				return "";
+			}
 		}
 	}
 });

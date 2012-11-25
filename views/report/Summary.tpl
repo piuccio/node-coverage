@@ -75,7 +75,7 @@
 			<tr class="partial">
 				<th></th>
 				<th colspan="3" class="flap">
-					<a href="VARIABLE">${locale.STAT_GRAPH}</a>
+					<a href="/stats/${data.reportName}">${locale.STAT_GRAPH}</a>
 				</th>
 			</tr>
 

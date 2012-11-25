@@ -194,3 +194,25 @@ function extractConditions(test, content, expected) {
 
 	test.done();
 }
+
+exports.order = function (test) {
+	// This test generates statements ending/starting at the same position
+	test.expect(1);
+
+	var content = "function T(b){b=b||0;if(true){}}";
+	var structure = js.interpret("test", content);
+	var result = highlight(content, structure).original;
+
+	var list = [];
+	result[0].forEach(function(token) {
+		if (token.type) {
+			list.push(token.type);
+		}
+	});
+
+	var expected = "fb_sb_sb_se_sb_cb_ce_se_se_fe";
+
+	test.equal(list.join("_"), expected);
+
+	test.done();
+};

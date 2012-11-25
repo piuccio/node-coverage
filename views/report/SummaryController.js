@@ -47,18 +47,6 @@ Aria.classDefinition({
 
 		getFileUrl : function (name) {
 			return "/report/" + this._data.reportName + "/file/" + this.encodeReportName(name);
-		},
-
-		encodeReportName : function (name) {
-			return name.replace(/\//g, "%2F");
-		},
-
-		decodeReportName : function (name) {
-			if (name) {
-				return name.replace(/%2F/g, "/");
-			} else {
-				return "";
-			}
 		}
 	}
 });

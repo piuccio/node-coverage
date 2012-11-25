@@ -1,0 +1,58 @@
+{CSSTemplate {
+	$classpath : "views.stats.Style"
+}}
+{macro main()}
+.graphContainer {
+	min-width: 600px;
+	position: relative;
+}
+
+.categories {
+	float: left;
+	text-align: right;
+	width: 19%;
+	margin-top: 60px;
+}
+
+.charts {
+	float: left;
+	width: 80%;
+	border: 1px solid #CCC;
+	min-height: 200px;
+	background-color: #F1F1F1;
+}
+
+.categories li {
+	margin: 10px 0;
+	padding : 12px;
+	border: 1px solid #CCC;
+	border-right: transparent;
+	background-color: #E5E5E5;
+	border-radius: 4px 0 0 4px;
+	box-shadow: 2px 6px 6px -1px #CCC;
+}
+
+.categories li:hover {
+	background-color: #F1F1F1;
+}
+
+.categories li.selected {
+	background-color: #F1F1F1;
+}
+
+.packageTitle {
+	padding: 12px;
+	border-bottom: 1px solid #CCC;
+	border-top: 1px solid #CCC;
+	background-color: #E5E5E5;
+}
+
+.packageTitle.open, .packageTitle:hover {
+	background-color: #F1F1F1;
+}
+
+tr:nth-child(even) td {
+	background-color: #E5E5E5;
+}
+{/macro}
+{/CSSTemplate}

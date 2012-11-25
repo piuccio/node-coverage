@@ -34,6 +34,21 @@ Aria.resourcesDefinition({
 		"CONDITION_LEGEND" : "have a yellow background if they are only partially covered. The text 'true' or 'false' in top/right corner means that the condition was only evaluated 'true' or 'false'.",
 
 		"MERGE_ERROR" : "Error while merging reports:\n %1\n %2",
-		"GENERIC_ERROR" : "I dunno what happened!"
+		"GENERIC_ERROR" : "I dunno what happened!",
+
+		"STATS_COVERAGE" : "Statement converage",
+		"STATS_UNUSED" : "Unused code",
+		"STATS_SIZE" : "File size",
+		"STATS_PACKAGE" : "Package",
+		"STATS_PACKAGE_LENGTH" : "Package length:",
+		"STATS_UNUSED_STATEMENTS" : "# of non covered statements",
+		"STATS_UNUSED_PERCENTAGE" : "Percentage",
+		"STATS_UNUSED_BY_PACKAGE" : "Unused statements by package",
+		"STATS_SIZE_ORIGINAL" : "Original file size",
+		"STATS_SIZE_COVERED" : "Size including only covered statements",
+		"STATS_SIZE_GAIN" : "Non covered statements",
+		"STATS_SIZE_ORIGINAL_SHORT" : "Original",
+		"STATS_SIZE_COVERED_SHORT" : "Covered",
+		"STATS_SIZE_GAIN_PERCENTAGE" : "%"
 	}
 });

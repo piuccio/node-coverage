@@ -17,7 +17,7 @@ function callSomething (yes) {
 	if (yes) {
 		var c = "c";
 		var d = "d";
-	} else {
+	} else if (!yes) {
 		if (true && false) {
 			var something = false;
 
