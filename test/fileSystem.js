@@ -1,6 +1,7 @@
 var fs = require("../lib/fileSystem");
 var nodefs = require("fs");
 var rmrf = require("rimraf");
+var fileUtil = require("../lib/file");
 
 function getAsserter() {
 	var scope = {
@@ -24,7 +25,7 @@ exports.performSingleFile = function (test) {
 	test.expect(4);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/fs/txt/one";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/one");
 
 	fs.perform(fileName, asserter.callback).then(function (error) {
 		// Deferred resolved
@@ -44,7 +45,7 @@ exports.performMissingFile = function (test) {
 	test.expect(1);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/whatever_is_missing";
+	var fileName = fileUtil.osIndependent(__dirname + "/whatever_is_missing");
 
 	fs.perform(fileName, asserter.callback).then(function (error) {
 		test.ok(false, "Resolve method shouldn't be called");
@@ -59,7 +60,7 @@ exports.performFolder = function (test) {
 	test.expect(6);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/fs/txt/";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/");
 
 	fs.perform(fileName + "*", asserter.callback).then(function (error) {
 		test.ifError(error);
@@ -80,7 +81,7 @@ exports.performEmptyFolder = function (test) {
 	test.expect(1);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/fs/txt/emptyFolder";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/emptyFolder");
 
 	fs.perform(fileName, asserter.callback).then(function (error) {
 		test.ok(false, "Resolve method shouldn't be called");
@@ -95,7 +96,7 @@ exports.performFolderRecursive = function (test) {
 	test.expect(7);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/fs/txt/";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/");
 
 	// The difference is that here there are two stars
 	fs.perform(fileName + "**", asserter.callback).then(function (error) {
@@ -118,10 +119,10 @@ exports.performFolderRecursiveExclude = function (test) {
 	test.expect(6);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/fs/txt/";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/");
 
 	var performOptions = {
-		exclude : ["/something_we_don/t_care", __dirname + "/fs/txt/subFolder"]
+		exclude : ["/something_we_don/t_care", fileUtil.osIndependent(__dirname + "/fs/txt/subFolder")]
 	};
 
 	// This one should include also subFolder
@@ -144,10 +145,10 @@ exports.performFolderRecursiveExcludeString = function (test) {
 	test.expect(6);
 
 	var asserter = getAsserter();
-	var fileName = __dirname + "/fs/txt/";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/");
 
 	var performOptions = {
-		exclude : __dirname + "/fs/txt/subFolder"
+		exclude : fileUtil.osIndependent(__dirname + "/fs/txt/subFolder")
 	};
 
 	// This one should include also subFolder
@@ -169,7 +170,7 @@ exports.performFolderRecursiveExcludeString = function (test) {
 exports.performGenerateError = function (test) {
 	test.expect(1);
 
-	var fileName = __dirname + "/fs/txt/two";
+	var fileName = fileUtil.osIndependent(__dirname + "/fs/txt/two");
 	var callback = function () {
 		throw new Error("Error in callback");
 	};
