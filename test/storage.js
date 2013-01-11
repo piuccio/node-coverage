@@ -1,6 +1,7 @@
 // Unit tests for storage classes
 
 var storage = require("../lib/storage");
+var fileUtil = require("../lib/file");
 var rmrf = require("rimraf");
 
 exports.interface = {
@@ -226,9 +227,9 @@ normalRead = function (test, module) {
 	test.expect(5);
 
 	// Some object names
-	var a = __dirname + "/tmp/a";
-	var b = __dirname + "/tmp/b";
-	var c = __dirname + "/tmp/c";
+	var a = fileUtil.osIndependent(__dirname + "/tmp/a");
+	var b = fileUtil.osIndependent(__dirname + "/tmp/b");
+	var c = fileUtil.osIndependent(__dirname + "/tmp/c");
 
 	module.save(a, "text", function (err) {
 		test.ok(!err, "There shouldn't be errors saving a");
@@ -255,7 +256,7 @@ normalRead = function (test, module) {
 override = function (test, module) {
 	test.expect(3);
 
-	var a = __dirname + "/tmp/a";
+	var a = fileUtil.osIndependent(__dirname + "/tmp/a");
 
 	module.save(a, "text", function (err) {
 		module.save(a, "another", function (err) {
@@ -274,7 +275,7 @@ override = function (test, module) {
 list = function (test, module) {
 	test.expect(5);
 
-	var base = __dirname + "/tmp/list/";
+	var base = fileUtil.osIndependent(__dirname + "/tmp/list/");
 
 	module.save(base + "a", "text", function (err) {
 		module.save(base + "b", "other", function (err) {
@@ -299,7 +300,7 @@ list = function (test, module) {
 function many (test, module) {
 	test.expect(6);
 
-	var base = __dirname + "/tmp/list/";
+	var base = fileUtil.osIndependent(__dirname + "/tmp/list/");
 
 	module.save(base + "a", "A", function (err) {
 		module.save(base + "b", "B", function (err) {
@@ -316,7 +317,7 @@ function many (test, module) {
 					module.read([base + "b", base + "f"], function (error, objects) {
 						test.ok(!!error, "I should get an error reading missing reports");
 
-						test.notEqual(error.message.indexOf(base + "f"), -1, "Error should mention base+f");
+						test.notEqual(error.message.indexOf(base + "f"), -1, "Error should mention base+f in message '" + error.message + "'");
 
 						test.done();
 					});
