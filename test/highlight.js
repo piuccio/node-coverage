@@ -3,6 +3,7 @@ var path = require("path");
 var fs = require("fs");
 var expected = require("./highlight/expected");
 var js = require("../lib/interpreters/basic javascript");
+var fileUtil = require("../lib/file");
 
 exports.splitLines = function (test) {
 	test.expect(1 + assertPerLine());
@@ -32,8 +33,9 @@ exports.splitLines = function (test) {
 				reconstructed += "\n";
 			}
 		});
-
-		test.equal(reconstructed, content, "File differ from list of lines");
+		// normalize line feeds just for comparison
+		var normalized = fileUtil.normalizeNewLines(content);
+		test.equal(reconstructed, normalized, "File differ from list of lines");
 
 		test.done();
 	});
