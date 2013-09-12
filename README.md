@@ -162,6 +162,23 @@ The command
 
 copies and instrument all files inside `myApp` excluding `.git` which is not copied at all and `lib/minified` which is copied but won't be instrumented for coverage.
 
+### Collecting Coverage
+
+When instrumented offline, files can be served
+
+* by node-coverage using as document root the instrumented path
+
+* by any other web server. Reports however should still be sent back to node-coverage either through XHR or form submit.
+
+By default `$$_l.submit` sends an XHR POST request to `/node-coverage-store` containing the JSON report.
+
+You can set up your server to redirect this request to node coverage or override the private method `$$_l.__send`. This method receives the coverage report as string.
+
+node-coverage server accepts two types of POST request:
+
+* XHR with `Content-type: application/json` and coverage report as request body.
+* Form submit with `Content-type: application/x-www-form-urlencoded` and coverage report as a string  inside the field `coverage`.
+
 #### Unit Test
 
 In order to run unit tests after cloning this repository you need to run
