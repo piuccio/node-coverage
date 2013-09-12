@@ -99,7 +99,8 @@ It's also possible to specify a report name from the `submit` function
 * `--session`, `--no-session` Enable or disable session storage for information not strictly needed by the browser. By default it's enabled. Disabling this means that more code is sent to and from the client.
 * `-i` or `--ignore` Ignore file or folder. This file/folder won't be instrumented. Path is relative to document root.
 * `--proxy` Proxy mode. You can use node-coverage to instrument files on a differnt host.
-* `-v` or `--verbose` Enable more verbose logging information. Default `false`
+* `--exit-on-submit` The default behavior is to keep the server running in order to collect multiple reports. By enabling this options the server will automatically shut down when a coverage report is received. This is useful for some continous integration environment.
+* `-v` or `--verbose` Enable more verbose logging information. Default `false`.
 
 By default function coverage is disabled, to enable it you can run
 

@@ -34,9 +34,13 @@ var argv = require("optimist")
 		.default("proxy", false)
 		.describe("proxy", "Start the instrumentation server in HTTP proxy mode on port specified by -p.")
 	.boolean("v").alias("v", "verbose").default("v", false)
+	.boolean("exit-on-submit")
+		.default("exit-on-submit", false)
+		.describe("exit-on-submit", "Close the server and exit the process after a coverage report is submitted.")
 	.argv;
 
 
+var admin_server;
 if (argv.h) {
 	require("optimist").showHelp();
 } else {
@@ -75,15 +79,16 @@ if (argv.h) {
 						return path;
 					}
 				}),
-				"verbose" : argv.v
+				"verbose" : argv.v,
+				"exit-on-submit" : argv["exit-on-submit"]
 			};
-			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, config);
+			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, config, onClose);
 			
 			console.log("Starting server on port", argv.p);
 		}
 
 		/* Admin server */
-		require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
+		admin_server = require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
 		console.log("Starting administration interface on port", argv.a);
 		
 		if (argv.v) {
@@ -92,4 +97,9 @@ if (argv.h) {
 	} catch (ex) {
 		console.error("Please specify a valid report directory", ex);
 	}
+}
+
+// Called when the instrumentation server closes
+function onClose () {
+	admin_server.close();
 }
