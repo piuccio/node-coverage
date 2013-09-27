@@ -16,7 +16,7 @@
   ],
   "name": "node-coverage",
   "description": "node-coverage is a tool that measures code coverage of JavaScript application.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/piuccio/node-coverage",
   "repository": {
     "type": "git",
@@ -25,7 +25,8 @@
   "main": "./index",
   "bin": {
     "node-coverage-instrument": "./instrument.js",
-    "node-coverage": "./server.js"
+    "node-coverage": "./server.js",
+    "node-coverage-merge": "./merge.js"
   },
   "dependencies": {
     "optimist": "~0.3.1",

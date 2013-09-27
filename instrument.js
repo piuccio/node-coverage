@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var fileSystem = require("./lib/fileSystem");
 var argv = require("optimist")
 	.usage("Instrument a folder for code coverage.\n$0 source destination")

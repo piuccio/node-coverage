@@ -290,6 +290,11 @@ Where `id` is the report name. It's possible to merge more than two reports addi
 
 The returned JSON has the same structure of a single report.
 
+It's also possible to merge multiple reports from the command line
+
+    node merge.js -o destination_report.json report1.json report2.json [... reportN.json]
+
+
 ## Interpreters
 
 node-coverage has a modular system for interpreting and instrumenting JavaScript files. This allows you to create an interpreter for any type of file.
