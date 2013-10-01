@@ -14,7 +14,7 @@ if (argv.h) {
 	console.error("Output file is mandatory.");
 	help();
 } else if (argv._.length < 2) {
-	console.error("Output file is mandatory.");
+	console.error("Merge requires at least two files.");
 	help();
 } else {
 	good(argv.o, argv._);
