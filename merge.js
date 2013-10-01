@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 var fs = require("fs");
 var report = require("./lib/report");
+var mkdirp = require("mkdirp");
+var path = require("path");
 var argv = require("optimist")
 	.usage("Merge coverage reports.\n$0 -o destination source [source ...]")
 	.boolean("h").alias("h", "help")
@@ -22,8 +24,8 @@ if (argv.h) {
 
 function help (cleanExit) {
 	require("optimist").showHelp();
-	if (cleanExit) {
-		process.exit(0);
+	if (!cleanExit) {
+		process.exit(1);
 	}
 }
 
@@ -32,5 +34,6 @@ function good (destination, files) {
 	files.forEach(function (file) {
 		reports.push(JSON.parse(fs.readFileSync(file)));
 	});
+	mkdirp.sync(path.dirname(destination));
 	fs.writeFileSync(destination, JSON.stringify(report.mergeReports(reports)));
 }
