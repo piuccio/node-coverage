@@ -36,10 +36,13 @@
     "express": "2.x",
     "http-proxy": "~0.8.0",
     "jade": "~0.20",
-    "mkdirp": "~0.3.0"
+    "mkdirp": "~0.3.0",
+    "q": "~0.9.7",
+    "glob": "~3.2.7"
   },
   "devDependencies": {
-    "nodeunit": "~0.8.2"
+    "nodeunit": "~0.8.2",
+    "rimraf": "~2.2.5"
   },
   "scripts": {
     "test": "node run_tests.js"
