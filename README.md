@@ -183,7 +183,11 @@ node-coverage server accepts two types of POST request:
 
 In order to run unit tests after cloning this repository you need to run
 
-    node instrument.js -t
+    npm test
+
+During development, if you want to run a single test you can call
+
+    node run_tests.js test/testFile.js
 
 
 ## JSONP API

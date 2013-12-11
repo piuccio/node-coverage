@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 var fs = require("fs");
 var report = require("./lib/report");
 var mkdirp = require("mkdirp");

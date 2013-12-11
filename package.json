@@ -24,9 +24,9 @@
   },
   "main": "./index",
   "bin": {
-    "node-coverage-instrument": "./instrument.js",
-    "node-coverage": "./server.js",
-    "node-coverage-merge": "./merge.js"
+    "node-coverage-instrument": "./cli/instrument",
+    "node-coverage": "./cli/server",
+    "node-coverage-merge": "./cli/merge"
   },
   "dependencies": {
     "optimist": "~0.3.1",
@@ -39,10 +39,10 @@
     "mkdirp": "~0.3.0"
   },
   "devDependencies": {
-    "nodeunit": "~0.6.4"
+    "nodeunit": "~0.8.2"
   },
   "scripts": {
-    "test": "node instrument.js -t"
+    "test": "node run_tests.js"
   },
   "license": "MIT",
   "engines": {

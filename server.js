@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 var fs = require("fs");
 var argv = require("optimist")
 	.usage("Start a simple web server to instrument JS code.")

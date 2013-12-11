@@ -1,9 +1,7 @@
-#!/usr/bin/env node
 var fileSystem = require("./lib/fileSystem");
 var argv = require("optimist")
 	.usage("Instrument a folder for code coverage.\n$0 source destination")
 	.boolean("h").alias("h", "help")
-	.boolean("t").alias("t", "test").describe("t", "Run unit tests.")
 	.boolean("function")
 		.default("function", false)
 		.describe("function", "Enable function coverage. Disable with --no-function")
@@ -21,26 +19,17 @@ var argv = require("optimist")
 
 
 
-if (argv.t) {
-	runTests();
-} else {
-	switch (argv._.length) {
-		case 1:
-			instrumentFile(argv._[0], argv);
-			break;
-		case 2:
-			instrumentFolder(argv._[0], argv._[1], argv);
-			break;
-		default:
-			displayHelp();
-			break;
-	}
+switch (argv._.length) {
+	case 1:
+		instrumentFile(argv._[0], argv);
+		break;
+	case 2:
+		instrumentFolder(argv._[0], argv._[1], argv);
+		break;
+	default:
+		displayHelp();
+		break;
 }
-
-
-function runTests () {
-	require("nodeunit").reporters.default.run(['test']);
-};
 
 function displayHelp () {
 	require("optimist").showHelp();
