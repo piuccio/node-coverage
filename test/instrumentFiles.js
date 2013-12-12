@@ -1,9 +1,9 @@
-var fileSystem = require("../lib/fileSystem");
+var helpers = require("./helpers/utils");
 var path = require("path");
 var clientCode = require("../lib/clientCode");
 
-function createInstrumentCallback (container) {
-	return function (file, code) {
+function createCallback (container) {
+	return function (test, file, code) {
 		var isJs = (path.extname(file) === ".js");
 
 		container[file] = isJs ? {
@@ -25,8 +25,7 @@ exports.exclude = function (test) {
 
 	var instrumented = {};
 
-	fileSystem.statFileOrFolder(["."], "", createInstrumentCallback(instrumented), options);
-
+	helpers.run("**", createCallback(instrumented), test, options, function (test) {
 	var allFiles = Object.keys(instrumented);
 
 	test.expect(Math.max(allFiles.length * 3, 20));
@@ -40,8 +39,7 @@ exports.exclude = function (test) {
 			test.ok(false, "instrumentFiles was included");
 		}
 	});
-
-	test.done();
+	}, false);
 };
 
 exports.ignore = function (test) {
@@ -52,8 +50,7 @@ exports.ignore = function (test) {
 
 	var instrumented = {};
 
-	fileSystem.statFileOrFolder(["."], "", createInstrumentCallback(instrumented), options);
-
+	helpers.run("**", createCallback(instrumented), test, options, function (test) {
 	var allFiles = Object.keys(instrumented);
 
 	test.expect(Math.max(allFiles.length * 4, 20));
@@ -79,6 +76,5 @@ exports.ignore = function (test) {
 
 		test.ok(wasIgnoredIfNeeded, "File was not ignored " + fileName);
 	});
-
-	test.done();
+	}, false);
 };

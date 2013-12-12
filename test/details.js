@@ -1,42 +1,26 @@
 var helpers = require("./helpers/utils");
-var fileSystem = require("../lib/fileSystem");
 
 var expectedCoverage = require("./results/details").results;
 var totalAssertsPerFile = 9;
 
-function compare (file, code) {
-	var generatedReport = helpers.executeCode(file, code);
+function compare (test, file, code, report) {
 	var shortFileName = helpers.shortName(file);
 
 	var expected = expectedCoverage.code[shortFileName] || expectedCoverage.merge[shortFileName];
 
-	helpers.assertDetailsEquals(generatedReport.files[file], expected, file, testObject);
-
-	waitingFiles -= 1;
-	if (waitingFiles < 1) {
-		testObject.done();
-	}
+	helpers.assertDetailsEquals(report.files[file], expected, file, test);
 };
-
-var testObject;
-var waitingFiles;
 
 exports.codeDetails = function (test) {
 	var files = Object.keys(expectedCoverage.code);
 	test.expect(files.length * totalAssertsPerFile);
 
-	testObject = test;
-	waitingFiles = files.length;
-	
-	fileSystem.statFileOrFolder(["test/code/"], "", compare);
+	helpers.run("test/code/**", compare, test);
 };
 
 exports.mergeDetails = function (test) {
 	var files = Object.keys(expectedCoverage.merge);
 	test.expect(files.length * totalAssertsPerFile);
 
-	testObject = test;
-	waitingFiles = files.length;
-	
-	fileSystem.statFileOrFolder(["test/reports/"], "", compare);
+	helpers.run("test/reports/**", compare, test);
 };
