@@ -1,6 +1,7 @@
 var helpers = require("./helpers/utils");
 var fileSystem = require("../lib/fileSystem");
 var report = require("../lib/report");
+var instrument = require("../lib/instrument");
 
 var unusedLines = 21;
 var byFile = {
@@ -8,63 +9,84 @@ var byFile = {
 
 	'test/stats/one/first.js': 3,
 	'test/stats/one/sub/second.js': 0,
-    
-    'test/stats/two/base.js': 5,
-    'test/stats/two/first/sub.js': 6,
-    'test/stats/two/second/third/leaf.js': 3,
-    'test/stats/two/second/third/branch.js': 2
+
+	'test/stats/two/base.js': 5,
+	'test/stats/two/first/sub.js': 6,
+	'test/stats/two/second/third/leaf.js': 3,
+	'test/stats/two/second/third/branch.js': 2
 };
 var byPackage = {
 	0 : {
-		'test' : unusedLines
+		'/test' : unusedLines
 	},
 	1 : {
-		'test/stats' : unusedLines
+		'/test/stats' : unusedLines
 	},
 	2 : {
-		'test/stats/top.js': 2,
-		'test/stats/one' : 3,
-		'test/stats/two' : 16
+		'/test/stats/top.js': 2,
+		'/test/stats/one' : 3,
+		'/test/stats/two' : 16
 	},
 	3 : {
-		'test/stats/top.js': 2,
-		'test/stats/one/first.js': 3,
-		'test/stats/one/sub': 0,
-	    'test/stats/two/base.js': 5,
-	    'test/stats/two/first': 6,
-	    'test/stats/two/second': 5
+		'/test/stats/top.js': 2,
+		'/test/stats/one/first.js': 3,
+		'/test/stats/one/sub': 0,
+		'/test/stats/two/base.js': 5,
+		'/test/stats/two/first': 6,
+		'/test/stats/two/second': 5
 	},
 	4 : {
-		'test/stats/top.js': 2,
-		'test/stats/one/first.js': 3,
-		'test/stats/one/sub/second.js': 0,
-	    'test/stats/two/base.js': 5,
-	    'test/stats/two/first/sub.js': 6,
-	    'test/stats/two/second/third': 5
+		'/test/stats/top.js': 2,
+		'/test/stats/one/first.js': 3,
+		'/test/stats/one/sub/second.js': 0,
+		'/test/stats/two/base.js': 5,
+		'/test/stats/two/first/sub.js': 6,
+		'/test/stats/two/second/third': 5
 	},
-	5 : byFile
+	5 : {
+		'/test/stats/top.js': 2,
+
+		'/test/stats/one/first.js': 3,
+		'/test/stats/one/sub/second.js': 0,
+
+		'/test/stats/two/base.js': 5,
+		'/test/stats/two/first/sub.js': 6,
+		'/test/stats/two/second/third/leaf.js': 3,
+		'/test/stats/two/second/third/branch.js': 2
+	}
 };
 
-exports.stats = function (test) {
+exports.unused = function (test) {
 	test.expect(8);
 
 	var allReports = [];
 
-	fileSystem.statFileOrFolder(["test/stats/"], "", function (file, code) {
-		allReports.push(helpers.executeCode(file, code));		
+	fileSystem.perform("test/stats/**", function (error, file, code) {
+		if (error) {
+			test.ifError(error);
+		}
+		var instrumented = instrument(file, code).clientCode;
+
+		allReports.push(helpers.executeCode(file, instrumented));
+	}).then(function () {
+		var merged = report.mergeReports(allReports);
+
+		report.stats(merged, function (statistics) {
+			var stats = statistics.unused;
+
+			test.equal(stats.total, unusedLines, "Total unused lines");
+			test.ok(helpers.objectEquals(stats.byFile, byFile), "Group by file");
+
+			for (var length in stats.byPackage) {
+				test.ok(helpers.objectEquals(
+					stats.byPackage[length], byPackage[length]), "Group by package, depth " + length);
+			}
+
+			test.done();
+		});
+	}, function (error) {
+		test.ifError(error);
+		test.ok(false, "Perform action failed");
+		test.done();
 	});
-
-	var merged = report.mergeReports(allReports);
-
-	var statistics = report.stats(merged);
-
-	test.equal(statistics.unused, unusedLines, "Total unused lines");
-	test.ok(helpers.objectEquals(statistics.byFile, byFile), "Group by file");
-
-	for (var length in statistics.byPackage) {
-		test.ok(helpers.objectEquals(
-			statistics.byPackage[length], byPackage[length]), "Group by package, depth " + length);
-	}
-
-	test.done();
 };
