@@ -80,7 +80,8 @@ if (argv.h) {
 					}
 				}),
 				"verbose" : argv.v,
-				"exit-on-submit" : argv["exit-on-submit"]
+				"exit-on-submit" : argv["exit-on-submit"],
+				"storage" : "disk"
 			};
 			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, config, onClose);
 			
@@ -88,7 +89,7 @@ if (argv.h) {
 		}
 
 		/* Admin server */
-		admin_server = require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a);
+		admin_server = require("./lib/server/administration").start(argv.d, argv.p, argv.r, argv.a, config);
 		console.log("Starting administration interface on port", argv.a);
 		
 		if (argv.v) {

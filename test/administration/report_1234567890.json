@@ -1,0 +1,88 @@
+{
+	"global" : {
+		"statements" : {
+			"total" : 100,
+			"covered" : 12,
+			"percentage" : 12
+		},
+		"conditions" : {
+			"total" : 10,
+			"coveredTrue" : 5,
+			"coveredFalse" : 5,
+			"percentage" : 50
+		},
+		"functions" : {
+			"total" : 10,
+			"covered" : 8,
+			"percentage" : 80
+		}
+	},
+	"files" : {
+		"one" : {
+			"code" : "",
+			"statements" : {
+				"total" : 10,
+				"covered" : 10,
+				"detail" : {},
+				"percentage" : 100
+			},
+			"conditions" : {
+				"total" : 20,
+				"coveredTrue" : 10,
+				"coveredFalse" : 10,
+				"detail" : {},
+				"percentage" : 50
+			},
+			"functions" : {
+				"total" : 6,
+				"covered" : 3,
+				"percentage" : 50,
+				"detail" : {}
+			}
+		},
+		"two" : {
+			"code" : "",
+			"statements" : {
+				"total" : 20,
+				"covered" : 10,
+				"detail" : {},
+				"percentage" : 50
+			},
+			"conditions" : {
+				"total" : 20,
+				"coveredTrue" : 20,
+				"coveredFalse" : 20,
+				"detail" : {},
+				"percentage" : 100
+			},
+			"functions" : {
+				"total" : 10,
+				"covered" : 3,
+				"percentage" : 30,
+				"detail" : {}
+			}
+		},
+		"three" : {
+			"code" : "",
+			"statements" : {
+				"total" : 30,
+				"covered" : 3,
+				"detail" : {},
+				"percentage" : 10
+			},
+			"conditions" : {
+				"total" : 10,
+				"coveredTrue" : 4,
+				"coveredFalse" : 4,
+				"detail" : {},
+				"percentage" : 40
+			},
+			"functions" : {
+				"total" : 20,
+				"covered" : 20,
+				"percentage" : 100,
+				"detail" : {}
+			}
+		}
+	}
+}

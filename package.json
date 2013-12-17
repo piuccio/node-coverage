@@ -33,12 +33,13 @@
     "uglify-js": "~1.2.5",
     "connect": "1.x",
     "connect-restreamer": "~1.0.0",
-    "express": "2.x",
+    "express": "~3.4.7",
     "http-proxy": "~0.8.0",
     "jade": "~0.20",
     "mkdirp": "~0.3.5",
     "q": "~0.9.7",
-    "glob": "~3.2.7"
+    "glob": "~3.2.7",
+    "send": "~0.1.4"
   },
   "devDependencies": {
     "nodeunit": "~0.8.2",

@@ -1,4 +1,5 @@
 var fileSystem = require("./lib/fileSystem");
+var instrument = require("./lib/instrument");
 var argv = require("optimist")
 	.usage("Instrument a folder for code coverage.\n$0 source destination")
 	.boolean("h").alias("h", "help")
@@ -21,7 +22,7 @@ var argv = require("optimist")
 
 switch (argv._.length) {
 	case 1:
-		instrumentFile(argv._[0], argv);
+		instrumentPattern(argv._[0], argv);
 		break;
 	case 2:
 		instrumentFolder(argv._[0], argv._[1], argv);
@@ -53,15 +54,37 @@ function instrumentFolder (source, destination, options) {
 	}
 };
 
-function instrumentFile (fileName, options) {
-	var callback = function (file, code) {
-		console.log(code);
+function instrumentPattern (pattern, cmdLineOptions) {
+	var options = {
+		"function" : cmdLineOptions["function"],
+		"condition" : cmdLineOptions["condition"],
+		"doHighlight" : true,
+		"verbose" : cmdLineOptions.verbose
 	};
 
-	fileSystem.statFileOrFolder([fileName], "", callback, {
-		"function" : options["function"],
-		"condition" : options["condition"],
-		"doHighlight" : true,
-		"verbose" : options.verbose
+	var onFileRead = function (error, file, code) {
+		if (error) {
+			console.error(file, error);
+		} else {
+			var result = instrument(file, code, options);
+
+			console.log("//", file);
+			if (options.verbose) {
+				console.log(result);
+			} else {
+				console.log(result.clientCode);
+			}
+		}
+	};
+
+	var exitWithError = function () {
+
+	}
+
+	fileSystem.perform(pattern, onFileRead, options).then(null, function (error) {
+		console.error(error);
+		nextThick(function () {
+			process.exit(1);
+		});
 	});
 };
