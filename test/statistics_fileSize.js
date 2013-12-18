@@ -3,7 +3,6 @@ var fileSystem = require("../lib/fileSystem");
 var report = require("../lib/report");
 var instrument = require("../lib/instrument");
 var fileContent = require("../lib/fileContent");
-var fileLib = require("../lib/file");
 var path = require("path");
 
 exports.size = function (test) {
@@ -94,7 +93,7 @@ exports.size = function (test) {
 				allReports.push(report);
 
 				var code = fileContent.getFullFile(report.files[file]);
-				var minify = fileContent.minify(code);
+				var minify = fileContent.minify(code.tree);
 				measuredSize[shortFile].originalMinify = new Buffer(minify).length;
 				fileContent.getFullSize(report.files[file], function (size) {
 					measuredSize[shortFile].original = size;
@@ -102,7 +101,7 @@ exports.size = function (test) {
 				});
 
 				var coveredCode = fileContent.getCoveredFile(report.files[file]);
-				var minify = fileContent.minify(coveredCode);
+				var minify = fileContent.minify(coveredCode.tree);
 				measuredSize[shortFile].coveredMinify = new Buffer(minify).length;
 				fileContent.getCoveredSize(report.files[file], function (size) {
 					measuredSize[shortFile].covered = size;

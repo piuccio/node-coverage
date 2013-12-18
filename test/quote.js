@@ -10,8 +10,7 @@ exports.quote = function (test) {
 	
 	var code = instrument(fileName, "var a = function () { if (true) {}};", {
 		"function" : true,
-		"condition" : true,
-		"highlight" : true
+		"condition" : true
 	}).clientCode;
 	
 	var result = helpers.executeCode(fileName, code);

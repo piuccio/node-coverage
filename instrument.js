@@ -43,7 +43,6 @@ function instrumentFolder (source, destination, options) {
 		fileSystem.statFileOrFolder([source], "", callback, {
 			"function" : options["function"],
 			"condition" : options["condition"],
-			"doHighlight" : true,
 			"exclude" : options.exclude,
 			"ignore" : options.ignore,
 			"verbose" : options.verbose
@@ -58,7 +57,6 @@ function instrumentPattern (pattern, cmdLineOptions) {
 	var options = {
 		"function" : cmdLineOptions["function"],
 		"condition" : cmdLineOptions["condition"],
-		"doHighlight" : true,
 		"verbose" : cmdLineOptions.verbose
 	};
 

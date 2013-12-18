@@ -29,8 +29,7 @@ var options = {
 			}
 		},
 		"function" : true,
-		"condition" : true,
-		"doHighlight" : true
+		"condition" : true
 	}
 };
 

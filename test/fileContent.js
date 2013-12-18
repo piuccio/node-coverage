@@ -5,6 +5,8 @@ var instrument = require("../lib/instrument");
 var fileContent = require("../lib/fileContent");
 var fileLib = require("../lib/file");
 var path = require("path");
+var parser = require("uglify-js").parser;
+var uglify = require("uglify-js").uglify;
 
 exports.unused = function (test) {
 	test.expect(9);
@@ -12,22 +14,20 @@ exports.unused = function (test) {
 	var expectedCode = {};
 
 	fileSystem.perform("test/fileSize_onlyCovered/**", function (error, file, code) {
-		expectedCode[path.basename(file)] = code.replace(/\n*\t*/g, "");
+		expectedCode[path.basename(file)] = uglify.gen_code(parser.parse(code), {beautify : false});
 	}).then(function () {
 		fileSystem.perform("test/fileSize/**", function (error, file, code) {
 			test.ifError(error);
+			code = fileLib.normalizeNewLines(code);
 
 			var instrumented = instrument(file, code).clientCode;
 			var report = helpers.executeCode(file, instrumented);
 
 			var regeneratedCode = fileContent.getFullFile(report.files[file]);
 
-			code = fileLib.normalizeNewLines(code);
+			test.equals(code, regeneratedCode.code, "Regenerated code for " + file);
 
-			test.equals(code, regeneratedCode, "Regenerated code for " + file);
-
-			var coveredCode = fileContent.getCoveredFile(report.files[file]);
-			coveredCode = coveredCode.replace(/\n*\t*/g, "");
+			var coveredCode = fileContent.getCoveredFile(report.files[file]).code;
 
 			test.equals(expectedCode[path.basename(file)], coveredCode, "Covered code for " + file);
 		}).then(function () {
@@ -75,6 +75,12 @@ function shouldntThrow (test, code) {
 	var coveredCode = fileContent.getCoveredFile(report.files["dummy.js"]);
 
 	test.doesNotThrow(function () {
-		fileContent.minify(coveredCode);
+		try {
+			fileContent.minify(coveredCode.tree);
+		} catch (ex) {
+			ex.message = "\nUnable to minify the following code:\n" + coveredCode;
+			console.error(ex);
+			throw ex;
+		}
 	});
 }

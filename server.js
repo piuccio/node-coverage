@@ -1,4 +1,5 @@
 var fs = require("fs");
+var mkdirp = require("mkdirp");
 var argv = require("optimist")
 	.usage("Start a simple web server to instrument JS code.")
 	.options("d", {
@@ -45,9 +46,16 @@ if (argv.h) {
 	require("optimist").showHelp();
 } else {
 	try {
-		var stat = fs.statSync(argv.r);
-		if (!stat.isDirectory()) {
-			throw new Error(argv.r + " is not a directory");
+		if (!fs.existsSync(argv.r)) {
+			if (argv.v) {
+				console.log("Creating report folder", argv.r);
+			}
+			mkdirp.sync(argv.r);
+		} else {
+			var stat = fs.statSync(argv.r);
+			if (!stat.isDirectory()) {
+				throw new Error(argv.r + " is not a directory");
+			}
 		}
 		
 		var ignore = argv.i || [];
@@ -61,7 +69,6 @@ if (argv.h) {
 			config = {
 				"function" : argv["function"],
 				"condition" : argv.condition,
-				"doHighlight" : true,
 				"verbose" : argv.v
 			};
 			require("./lib/server/proxy").start(argv.d, argv.p, argv.r, argv.a, config);
@@ -71,7 +78,6 @@ if (argv.h) {
 			config = {
 				"function" : argv["function"],
 				"condition" : argv.condition,
-				"doHighlight" : !argv.session,
 				"ignore" : ignore.map(function (path) {
 					if (path.charAt(0) !== "/") {
 						return "/" + path;

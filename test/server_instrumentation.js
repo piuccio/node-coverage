@@ -26,8 +26,7 @@ exports.memory = function (test) {
 			keys : function () {}
 		},
 		"function" : true,
-		"condition" : true,
-		"doHighlight" : true
+		"condition" : true
 	};
 	var serverOptions = {
 		docRoot : __dirname,

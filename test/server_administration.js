@@ -9,8 +9,7 @@ var reportPath = path.join(__dirname, "administration");
 var options = {
 	"storage" : "disk",
 	"function" : true,
-	"condition" : true,
-	"doHighlight" : true
+	"condition" : true
 };
 
 exports.json = {

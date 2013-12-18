@@ -7,11 +7,11 @@ var admin = require("../lib/server/administration");
 var instr = require("../lib/server/instrumentation");
 var path = require("path");
 var storage = require("../lib/storage");
-var expected = require("./highlight/expected");
+var fs = require("fs");
+var fileUtil = require("../lib/file");
 
 exports.display = function (test) {
-	// log has 22 lines of code, 6 error assert
-	test.expect(6 + assertPerLine());
+	test.expect(7);
 
 	var serverOptions = {
 		docRoot : path.join(__dirname, "/highlight"),
@@ -45,9 +45,11 @@ exports.display = function (test) {
 							utils.getFile("/json/report/" + reportName, adminPort, function (error, report) {
 								test.ifError(error);
 
-								var code = JSON.parse(report).files["/log.js"].code;
+								var code = JSON.parse(report).files["/log.js"].highlight;
 
-								checkCode(test, code);
+								var expected = fs.readFileSync(path.join(__dirname, "/highlight/expected.js"));
+								expected = fileUtil.normalizeNewLines(expected.toString());
+								test.equal(code, expected, "Comparing highlighted code");
 
 								instrumentServer.close();
 								adminServer.close();
@@ -60,32 +62,3 @@ exports.display = function (test) {
 		});
 	});
 };
-
-checkCode = function (test, code) {
-	var originalCode = code.original;
-	expected.forEach(function (line, number) {
-		test.equal(line.node.length, originalCode[number].length, "Nodes length differs on line " + number);
-
-		line.node.forEach(function (type, position) {
-			var msg = "Node in line " + number + " position " + position;
-
-			if (type === "t") {
-				test.ok(typeof originalCode[number][position] === "string", msg);
-			} else {
-				test.equal(type, originalCode[number][position].type, msg);
-			}
-		});
-	});
-}
-
-function assertPerLine () {
-	var asserts = 0;
-	expected.forEach(function (line) {
-		// One assert for node length
-		asserts += 1;
-		// One assert for each node
-		asserts += line.node.length;
-	});
-
-	return asserts;
-}
