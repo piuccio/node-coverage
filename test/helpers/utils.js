@@ -50,10 +50,11 @@ exports.run = function (pattern, callback, test, options, then, run) {
  * @param {String} file Name of the file
  * @param {String} code Code to be executed (already instrumented)
  * @param {Object} global This corresponds to `window` in the context
+ * @param {String} reportName Name of the report for the submit method
  *
  * @return {Object} Report as JSON object
  */
-exports.executeCode = executeCode = function (file, code, globals) {
+exports.executeCode = executeCode = function (file, code, globals, reportName) {
 	var serialized;
 	var window = globals || {};
 	var sandbox = {
@@ -67,7 +68,7 @@ exports.executeCode = executeCode = function (file, code, globals) {
 		window : window
 	};
 	vm.runInNewContext(code, sandbox, file);
-	sandbox.$$_l.submit();
+	sandbox.$$_l.submit(reportName);
 
 	if (serialized) {
 		var json = JSON.parse(serialized);
@@ -256,42 +257,55 @@ exports.getFile = function (name, port, callback) {
 /**
  * Generate an XMLHttpRequest object able to send a report to the server
  *
+ * @param {Number} port Port on which the request is made
  * @param {Function} callback Called when the submit is sent
  */
 exports.xhr = function (port, callback) {
 	return function () {
 		this.open = function () {};
 		this.setRequestHeader = function () {};
-		this.send = function (data) {
-			var req = http.request({
-				port : port,
-				path : "/node-coverage-store",
-				method : "POST",
-				headers : {
-					"Content-Type" : "application/json"
-				}
-			}, function (res) {
-				if (res.statusCode === 200) {
-					var buffer = "";
-
-					res.setEncoding("utf8");
-					res.on("data", function (chunk) {
-					    buffer += chunk;
-					}).on("end", function () {
-						callback(null, buffer);
-					});
-				} else {
-					callback(new Error("Response status : " + res.statusCode));
-				}
-			}).on("error", function (error) {
-				callback(error);
-			});
-
-			req.write(data);
-
-			req.end();
-		};
+		this.send = exports.httpAction({
+			port : port,
+			path : "/node-coverage-store",
+			method : "POST",
+			headers : {
+				"Content-Type" : "application/json"
+			}
+		}, callback);
 	}
+};
+
+/**
+ * Generate a object able to send a request to the server
+ *
+ * @param {Object} action Action to be sent to the server.
+ * @param {Function} callback Called when the submit is sent
+ *
+ * @return {Function} A function called with the data to be sent
+ */
+exports.httpAction = function (action, callback) {
+	return function (data) {
+		var req = http.request(action, function (res) {
+			if (res.statusCode === 200) {
+				var buffer = "";
+
+				res.setEncoding("utf8");
+				res.on("data", function (chunk) {
+				    buffer += chunk;
+				}).on("end", function () {
+					callback(null, buffer);
+				});
+			} else {
+				callback(new Error("Response status : " + res.statusCode));
+			}
+		}).on("error", function (error) {
+			callback(error);
+		});
+
+		req.write(data);
+
+		req.end();
+	};
 };
 
 /**

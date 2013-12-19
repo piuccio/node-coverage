@@ -9,14 +9,11 @@ var http = require("http");
 var storage = require("../lib/storage");
 var fs = require("fs");
 
-exports.memory = function (test) {
-	// All the stuff here is just to send a request
-	test.expect(4 + 2 * 10);
-
+function optionsGetter () {
 	var report = {};
 
 	var options = {
-		"storage" : {
+		"storage": {
 			save : function (name, content, callback) {
 				report.name = name;
 				report.content = JSON.parse(content);
@@ -25,8 +22,8 @@ exports.memory = function (test) {
 			read : function () {},
 			keys : function () {}
 		},
-		"function" : true,
-		"condition" : true
+		"function": true,
+		"condition": true
 	};
 	var serverOptions = {
 		docRoot : __dirname,
@@ -34,9 +31,24 @@ exports.memory = function (test) {
 		coverageOptions : options
 	};
 
-	var fileName = "/server/random.js";
+	var getOptions = function () {
+		return serverOptions;
+	};
+	getOptions.getReport = function () {
+		return report;
+	};
 
-	utils.startServer(server, serverOptions, function (error, port, useless, instance) {
+	return getOptions;
+}
+
+exports.memory = function (test) {
+	// All the stuff here is just to send a request
+	test.expect(4 + 2 * 10);
+
+	var fileName = "/server/random.js";
+	var getOptions = optionsGetter();
+
+	utils.startServer(server, getOptions(), function (error, port, useless, instance) {
 		test.ifError(error);
 
 		utils.getFile(fileName, port, function (errInGet, file) {
@@ -45,6 +57,7 @@ exports.memory = function (test) {
 			utils.executeCode(fileName, file, {
 				XMLHttpRequest : utils.xhr(port, function (errInXhr) {
 					test.ifError(errInXhr);
+					var report = getOptions.getReport();
 
 					test.ok(/^report_[0-9]+\.json$/.exec(path.basename(report.name)), "Invalid report name");
 
@@ -57,6 +70,49 @@ exports.memory = function (test) {
 					test.done();
 				})
 			});
+		});
+	});
+};
+
+exports.formSubmit = function (test) {
+	var fileName = "/server/random.js";
+
+	var fileName = "/server/random.js";
+	var getOptions = optionsGetter();
+
+	utils.startServer(server, getOptions(), function (error, port, useless, instance) {
+		test.ifError(error);
+
+		utils.getFile(fileName, port, function (errInGet, file) {
+			test.ifError(errInGet);
+
+			// Inject the logic for a form submit
+			file += "$$_l.__send=function(report){window.please_echo(report)};";
+			utils.executeCode(fileName, file, {
+				please_echo: function (reportAsString) {
+					utils.httpAction({
+						port : port,
+						path : "/node-coverage-store",
+						method : "POST",
+						headers : {
+							"Content-Type" : "application/x-www-form-urlencoded"
+						}
+					}, function (errorInEcho) {
+						test.ifError(errorInEcho);
+
+						var report = getOptions.getReport();
+						test.ok(/^form_submit_[0-9]+\.json$/.exec(path.basename(report.name)), "Invalid report name");
+
+						var check = report.content;
+
+						utils.assertCoverageEquals(check.files[fileName], expected, fileName, test);
+						utils.assertCoverageEquals(check.global, expected, fileName, test);
+
+						instance.close();
+						test.done();
+					})("coverage=" + reportAsString);
+				}
+			}, "form_submit");
 		});
 	});
 };

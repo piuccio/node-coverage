@@ -31,7 +31,7 @@
   "dependencies": {
     "optimist": "~0.3.1",
     "uglify-js": "~1.2.5",
-    "connect": "1.x",
+    "connect": "~2.12.0",
     "connect-restreamer": "~1.0.0",
     "express": "~3.4.7",
     "http-proxy": "~0.8.0",
