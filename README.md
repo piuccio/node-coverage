@@ -339,3 +339,6 @@ You can also enable or disable condition or function coverage using the same opt
     node server.js --proxy --no-condition -r ~/reports
 
 At the moment it only support http, not https.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/piuccio/node-coverage/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
