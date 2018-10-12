@@ -18,7 +18,6 @@ html(lang="en")
 								input(type="submit", value="Merge")
 						th Report
 						th Date
-						th Function stack
 				tbody
 					each report in reports
 						tr
@@ -29,5 +28,3 @@ html(lang="en")
 								a(href="#{serverRoot}/r/#{report.id}") #{report.id}
 							td
 								em=report.date
-							td
-								a(href="#{serverRoot}/fn/#{report.id}") view

@@ -94,7 +94,7 @@ exports.assertDetailsEquals = function (measured, expected, file, testObject) {
 exports.clusterFunctions = function (functions) {
 	var map = {};
 	functions.forEach(function (item) {
-		var match = /(\D+)\d+_\d+$/.exec(item);
+		var match = /(\D+)_\d+_\d+$/.exec(item);
 		var name = match[1];
 
 		if (!map[name]) {

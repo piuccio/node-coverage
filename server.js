@@ -28,6 +28,9 @@ var argv = require("optimist")
 	.boolean("session")
 		.default("session", true)
 		.describe("session", "Store instrumented code in session storage. This reduces the burden on browsers. Disable with --no-session")
+	.options("s", {
+		alias: "static-info"
+	}).describe("s", "In case files are pre-instrumented, path to the JSON file containing static information about instrumented files.")
 	.options("i", {
 		"alias" : "ignore"
 	}).describe("i", "Ignore file or folder. This file/folder won't be instrumented. Path relative to document root")
@@ -62,17 +65,17 @@ if (argv.h) {
 			config = {
 				"function" : argv["function"],
 				"condition" : argv.condition,
-				"doHighlight" : true,
+				"staticInfo" : true,
 				"verbose" : argv.v
 			};
-			require("./lib/server/proxy").start(argv.d, argv.p, argv.r, argv.a, config);
+			require("./lib/server/proxy").start(argv.p, argv.r, config);
 			
 			console.log("Starting proxy server on port ", argv.p);
 		} else {
 			config = {
 				"function" : argv["function"],
 				"condition" : argv.condition,
-				"doHighlight" : !argv.session,
+				"staticInfo" : !argv.session,
 				"ignore" : ignore.map(function (path) {
 					if (path.charAt(0) !== "/") {
 						return "/" + path;
@@ -83,7 +86,12 @@ if (argv.h) {
 				"verbose" : argv.v,
 				"exit-on-submit" : argv["exit-on-submit"]
 			};
-			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, argv.a, config, onClose);
+			var initialStaticInfo = null;
+			var staticInfoFile = argv["static-info"];
+			if (staticInfoFile) {
+				initialStaticInfo = JSON.parse(fs.readFileSync(staticInfoFile, "utf8"));
+			}
+			require("./lib/server/instrumentation").start(argv.d, argv.p, argv.r, config, onClose, initialStaticInfo);
 			
 			console.log("Starting server on port", argv.p);
 		}

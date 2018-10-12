@@ -29,6 +29,7 @@
     "node-coverage-merge": "./merge.js"
   },
   "dependencies": {
+    "mime": "1.x",
     "optimist": "~0.3.1",
     "uglify-js": "~1.2.5",
     "connect": "1.x",
@@ -39,10 +40,10 @@
     "mkdirp": "~0.3.0"
   },
   "devDependencies": {
-    "nodeunit": "~0.6.4"
+    "nodeunit": "~0.11.3"
   },
   "scripts": {
-    "test": "node instrument.js -t"
+    "test": "nodeunit test"
   },
   "license": "MIT",
   "engines": {

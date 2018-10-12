@@ -82,8 +82,6 @@ function mergeSpecial (file, code) {
 		thisIsAGlobalVariable : true
 	});
 
-	var shortFileName = helpers.shortName(file);
-
 	var specialCoverage = expectedDetails.mergeSpecial.coverage;
 	var specialDetails = expectedDetails.mergeSpecial.details;
 
